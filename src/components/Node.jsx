@@ -1,16 +1,12 @@
-const Node = ({ grid, pointer, stateHandling, dragStateHandling, row, col, isStart, isEnd }) => {
+const Node = ({ nodeMatrix, stateHandling, dragStateHandling, row, col, isStart, isEnd }) => {
 
-    const { nodes, setNodes} = grid;
-    const { startNodeRow, startNodeCol, endNodeRow, endNodeCol } = pointer;
     const { setStartNodeRow, setStartNodeCol, setEndNodeRow, setEndNodeCol } = stateHandling;
     const { draggedItem, setDraggedItem } = dragStateHandling;
 
-
-
+    //Just handling the 'start' node for now
     const handleDragStart = (e) => {
 
-        const node = e.target;
-        const isStartNode = node.classList.contains('start');
+        const isStartNode = e.target.classList.contains('start');
 
         const startNode = document.querySelector('.start');
         //const endNode = document.querySelector('.end');
@@ -20,7 +16,11 @@ const Node = ({ grid, pointer, stateHandling, dragStateHandling, row, col, isSta
 
         if(isStartNode) {
             setDraggedItem('start');
+
+            //Sets the data for the drag object to be retrieved later and
+            //used to update the corresponding node in the matrix;
             e.dataTransfer.setData('prevNodeId', `node-${prevStartParentNodeRow}-${prevStartParentNodeCol}`);
+
         } else {
             setDraggedItem('end');
             //e.dataTransfer.setData('prevNodeId', `node-${prevEndParentNodeRow}-${prevEndParentNodeCol}`)
@@ -30,36 +30,51 @@ const Node = ({ grid, pointer, stateHandling, dragStateHandling, row, col, isSta
 
 
     const handleDragEnter = e => {
-        
         const startNode = document.querySelector('.start');
         const endNode = document.querySelector('.end');
 
-        //This check helps to avoid 
+        //This check avoids the 'start' and 'end' divs and 
+        //*always* selects the parent cell;
         const newParent = e.target.id ? e.target : e.target.parentElement.id ? e.target.parentElement : e.target.parentElement.parentElement;
         const hoveringOver = newParent.id;
-        
+
+        //Retrieves the data set in 'handleDragStart' from the drag object to use as keys
+        //to update the previous 'start' node in the grid;
         const [prevNodeRow, prevNodeCol] = e.dataTransfer.getData('prevNodeId').match(/\d+/g);
+
+        //Gets the id of the cell we're currently hovering over to update
+        //the new 'start' node in the grid;
         const [newRow, newCol] = hoveringOver.match(/\d+/g);
 
-        console.log(newParent);
-
         if(draggedItem === 'start') {
-            newParent.appendChild(startNode);
-            
-            nodes[prevNodeRow][prevNodeCol].isStart = false;
-            nodes[newRow][newCol].isStart = true;
 
-            /*setStartNodeRow(parseInt(newRow));
-            setStartNodeCol(parseInt(newCol));   */
+            //All this methods work as intended,
+            //the previous 'start' node gets updated alongside the new one
+            //in the nodesMatrix;
+            newParent.appendChild(startNode);            
+            nodeMatrix[prevNodeRow][prevNodeCol].isStart = false;
+            nodeMatrix[newRow][newCol].isStart = true;
+
+            //↓ If uncommented, this throws the following error 
+            //↓ as soon as we drag the start node:
+            //(DOMException: Node.removeChild: The node to be removed is not a child of this node);
+
+            /*
+            setStartNodeRow(parseInt(newRow));
+            setStartNodeCol(parseInt(newCol));
+            */
+
         };
         
         if(draggedItem === 'end') {
-            //newParent.appendChild(endNode);
-            
-            /*nodes[prevNodeRow][prevNodeCol].isEnd = false;
-            nodes[newRow][newCol].isEnd = true;
+            newParent.appendChild(endNode);
+            nodeMatrix[prevNodeRow][prevNodeCol].isEnd = false;
+            nodeMatrix[newRow][newCol].isEnd = true;
+
+            /*
             setEndNodeRow(parseInt(newRow));
-            setEndNodeCol(parseInt(newCol));*/
+            setEndNodeCol(parseInt(newCol));
+            */
         };
 };
 
@@ -68,7 +83,8 @@ const Node = ({ grid, pointer, stateHandling, dragStateHandling, row, col, isSta
             { isStart && 
             <div onDragStart={handleDragStart} draggable={true} className="start cursor-grab bg-green-500 w-full h-full flex place-content-center">
             <i className="border-r-8 border-t-8 border-gray-800 rotate-45 h-4 w-4 place-self-center" />
-            </div>}
+            </div>
+            }
             { isEnd && 
             <div onDragStart={handleDragStart} draggable={true} className="end relative z-1 cursor-grab bg-red-500 w-full h-full flex place-content-center" >
             <i className="border-l-8 border-b-8 border-gray-800 rotate-45 h-4 w-4 place-self-center" />

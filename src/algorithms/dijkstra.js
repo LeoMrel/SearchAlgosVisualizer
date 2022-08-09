@@ -1,6 +1,24 @@
-import { createNodesMap, sortNodesByDistance, updateUnvisitedNeighbors } from "./auxFunctions";
+import { createNodesMap, getNodesInShortestPathOrder, sortNodesByDistance, updateUnvisitedNeighbors } from "./auxFunctions";
 
-export const dijkstra = (nodeMatrix, startNode, endNode) => {
+
+export const visualizeDijkstra = (nodeMatrix, variables) => {
+  
+  const {startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed} = variables;
+
+  //clear all styles before running animation again
+  const allNodes = [...document.getElementsByClassName('node')];
+  allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
+
+  const startNode = nodeMatrix[startNodeRow][startNodeCol];
+  const endNode = nodeMatrix[endNodeRow][endNodeCol];
+  
+  const visitedNodesInOrder = dijkstra(nodeMatrix, startNode, endNode);
+  const shortestPath = getNodesInShortestPathOrder(endNode);
+
+  animateDijkstra(visitedNodesInOrder, shortestPath, speed);
+}; 
+
+const dijkstra = (nodeMatrix, startNode, endNode) => {
     startNode.distance = 0;  
     
     const visitedNodesInOrder = [];
@@ -19,7 +37,8 @@ export const dijkstra = (nodeMatrix, startNode, endNode) => {
     }
   };
 
-export const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, speed) => {
+
+const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, speed) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {

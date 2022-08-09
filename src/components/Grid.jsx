@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import Node from './Node';
-import { animateDijkstra, dijkstra } from '../algorithms/dijkstra'
-import { createNodesMap, getNodesInShortestPathOrder } from '../algorithms/auxFunctions';
+import { visualizeDijkstra } from '../algorithms/dijkstra'
 
 const COLUMNS = 20;
 const ROWS = 30;
 
 const Grid = () => {
 
-    const [nodes, setNodes] = useState([]);
+    const [nodesMatrix, setNodesMatrix] = useState([]);
     const [speed, setSpeed] = useState(10);
 
     const [startNodeRow, setStartNodeRow] = useState(0);
@@ -21,9 +20,7 @@ const Grid = () => {
     const [draggedItem, setDraggedItem] = useState('');
 
 
-
-
-    //Initializes Grid
+//Initializes Grid
     useEffect(() => {
         const cells = [];
         const startNodeRow = 0;
@@ -47,37 +44,22 @@ const Grid = () => {
             cells.push(currentRow);
         };
 
-        return () => setNodes(cells)
+        return () => setNodesMatrix(cells)
     }, []);
 
 
-
-    const visualizeDijkstra = (nodeMatrix) => {
-        //clear all styles before running animation again
-        const allNodes = [...document.getElementsByClassName('node')];
-        allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
-    
-        const startNode = nodeMatrix[startNodeRow][startNodeCol];
-        const endNode = nodeMatrix[endNodeRow][endNodeCol];
-        
-        const visitedNodesInOrder = dijkstra(nodeMatrix, startNode, endNode);
-        const shortestPath = getNodesInShortestPathOrder(endNode);
-    
-        animateDijkstra(visitedNodesInOrder, shortestPath, speed);
-    }; 
-
     return (
         <div className="border border-red-400 border-solid flex self-center">
-            {nodes.map((row, rowIndex) => {
+            {nodesMatrix.map((row, rowIndex) => {
                 return(
                     <div key={rowIndex}>
                     {row.map((node, index) => {
+
                         const { row, col, isStart, isEnd } = node;
 
                         return <Node 
                                 key={index}
-                                grid={{nodes, setNodes}}
-                                pointer={{startNodeRow, startNodeCol, endNodeRow, endNodeCol}}
+                                nodeMatrix={nodesMatrix}
                                 stateHandling={{setStartNodeRow, setStartNodeCol, setEndNodeRow, setEndNodeCol }}
                                 dragStateHandling={{ draggedItem, setDraggedItem }}
                                 row={row}
@@ -90,7 +72,7 @@ const Grid = () => {
             })
             }
     
-    <button onClick={() => visualizeDijkstra(nodes)}>
+    <button onClick={() => visualizeDijkstra(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed })}>
         Search Path
     </button>
         </div>

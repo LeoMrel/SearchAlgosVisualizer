@@ -9,10 +9,10 @@ const Node = ({ nodeMatrix, stateHandling, dragStateHandling, row, col, isStart,
         const isStartNode = e.target.classList.contains('start');
 
         const startNode = document.querySelector('.start');
-        //const endNode = document.querySelector('.end');
+        const endNode = document.querySelector('.end');
         
         const [prevStartParentNodeRow, prevStartParentNodeCol] = startNode.parentElement.id.match(/\d+/g);
-        //const [prevEndParentNodeRow, prevEndParentNodeCol] = endNode.parentElement.id.match(/\d+/g);
+        const [prevEndParentNodeRow, prevEndParentNodeCol] = endNode.parentElement.id.match(/\d+/g);
 
         if(isStartNode) {
             setDraggedItem('start');
@@ -23,7 +23,7 @@ const Node = ({ nodeMatrix, stateHandling, dragStateHandling, row, col, isStart,
 
         } else {
             setDraggedItem('end');
-            //e.dataTransfer.setData('prevNodeId', `node-${prevEndParentNodeRow}-${prevEndParentNodeCol}`)
+            e.dataTransfer.setData('prevNodeId', `node-${prevEndParentNodeRow}-${prevEndParentNodeCol}`)
         }
     };
 
@@ -46,6 +46,8 @@ const Node = ({ nodeMatrix, stateHandling, dragStateHandling, row, col, isStart,
         //the new 'start' node in the grid;
         const [newRow, newCol] = hoveringOver.match(/\d+/g);
 
+        console.log(newRow, newCol)
+
         if(draggedItem === 'start') {
 
             //All this methods work as intended,
@@ -55,7 +57,7 @@ const Node = ({ nodeMatrix, stateHandling, dragStateHandling, row, col, isStart,
             nodeMatrix[prevNodeRow][prevNodeCol].isStart = false;
             nodeMatrix[newRow][newCol].isStart = true;
 
-            //↓ If uncommented, this throws the following error 
+            //↓ If uncommented, this throws the following error
             //↓ as soon as we drag the start node:
             //(DOMException: Node.removeChild: The node to be removed is not a child of this node);
 
@@ -79,7 +81,7 @@ const Node = ({ nodeMatrix, stateHandling, dragStateHandling, row, col, isStart,
 };
 
     return (
-        <div id={`node-${ row }-${ col }`} onDragEnter={handleDragEnter} className={`node relative flex place-items-center place-content-center w-12 h-12 border border-black`}>
+        <div id={`node-${ row }-${ col }`} onDragEnter={handleDragEnter} className={`node relative flex place-items-center place-content-center w-8 h-8 border border-black`}>
             { isStart && 
             <div onDragStart={handleDragStart} draggable={true} className="start cursor-grab bg-green-500 w-full h-full flex place-content-center">
             <i className="border-r-8 border-t-8 border-gray-800 rotate-45 h-4 w-4 place-self-center" />

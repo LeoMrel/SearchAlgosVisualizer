@@ -3,19 +3,19 @@ import { useEffect } from 'react';
 import Node from './Node';
 import { visualizeDijkstra } from '../algorithms/dijkstra'
 
-const COLUMNS = 20;
-const ROWS = 30;
+const COLUMNS = 30;
+const ROWS = 20;
 
 const Grid = () => {
 
     const [nodesMatrix, setNodesMatrix] = useState([]);
     const [speed, setSpeed] = useState(10);
 
-    const [startNodeRow, setStartNodeRow] = useState(0);
-    const [startNodeCol, setStartNodeCol] = useState(0);
+    const [startNodeRow, setStartNodeRow] = useState(8);
+    const [startNodeCol, setStartNodeCol] = useState(8);
 
-    const [endNodeRow, setEndNodeRow] = useState(20);
-    const [endNodeCol, setEndNodeCol] = useState(8);
+    const [endNodeRow, setEndNodeRow] = useState(8);
+    const [endNodeCol, setEndNodeCol] = useState(19);
 
     const [draggedItem, setDraggedItem] = useState('');
 
@@ -23,10 +23,10 @@ const Grid = () => {
 //Initializes Grid
     useEffect(() => {
         const cells = [];
-        const startNodeRow = 0;
-        const startNodeCol = 0;
-        const endNodeRow = 20;
-        const endNodeCol = 8;
+        const startNodeRow = 8;
+        const startNodeCol = 8;
+        const endNodeRow = 8;
+        const endNodeCol = 19;
 
         for (let row = 0; row < ROWS; row++) {
             const currentRow = [];
@@ -49,10 +49,10 @@ const Grid = () => {
 
 
     return (
-        <div className="border border-red-400 border-solid flex self-center">
+        <div className="flex flex-col self-center">
             {nodesMatrix.map((row, rowIndex) => {
                 return(
-                    <div key={rowIndex}>
+                    <div key={rowIndex} className='flex'>
                     {row.map((node, index) => {
 
                         const { row, col, isStart, isEnd } = node;
@@ -72,7 +72,9 @@ const Grid = () => {
             })
             }
     
-    <button onClick={() => visualizeDijkstra(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed })}>
+    <button 
+    onClick={() => visualizeDijkstra(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed })}
+    className="h-20 w-full text-white hover:bg-blue-800 bg-blue-700 place-self-end">
         Search Path
     </button>
         </div>

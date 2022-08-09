@@ -1,4 +1,4 @@
-  
+
 export const updateUnvisitedNeighbors = (node, grid) => {
     const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
     for (const neighbor of unvisitedNeighbors) {
@@ -7,6 +7,7 @@ export const updateUnvisitedNeighbors = (node, grid) => {
     }
   }
   
+
 export const getUnvisitedNeighbors = (node, grid) => {
     const neighbors = [];
     const {row, col} = node;
@@ -17,7 +18,8 @@ export const getUnvisitedNeighbors = (node, grid) => {
   
     return neighbors.filter(neighbor => neighbor && !neighbor.visited);
 }
-  
+
+
 export const createNodesMap = (grid) => {
     const map = [];
     for (const rows of grid) {
@@ -35,7 +37,7 @@ export const sortNodesByDistance = (unvisitedNodes) => {
 }
   
 // Backtracks from the finishNode to find the shortest path.
-// Only works when called *after* the dijkstra method above.
+// Only works when called *after* the dijkstra method.
 export const getNodesInShortestPathOrder = (endNode) => {
     const nodesInShortestPathOrder = [];
     let currentNode = endNode;

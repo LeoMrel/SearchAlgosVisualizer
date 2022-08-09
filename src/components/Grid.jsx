@@ -1,24 +1,35 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { getNodesInShortestPathOrder } from '../algorithms/auxFunctions';
-import { dijkstra } from '../algorithms/dijkstra';
 import Node from './Node';
+import { animateDijkstra, dijkstra } from '../algorithms/dijkstra'
+import { createNodesMap, getNodesInShortestPathOrder } from '../algorithms/auxFunctions';
 
-
-const START_NODE_ROW = 10;
-const START_NODE_COL = 10;
-const FINISH_NODE_ROW = 13;
-const FINISH_NODE_COL = 28;
+const COLUMNS = 20;
+const ROWS = 30;
 
 const Grid = () => {
 
     const [nodes, setNodes] = useState([]);
-    
-    const COLUMNS = 30;
-    const ROWS = 20;
+    const [speed, setSpeed] = useState(10);
 
+    const [startNodeRow, setStartNodeRow] = useState(0);
+    const [startNodeCol, setStartNodeCol] = useState(0);
+
+    const [endNodeRow, setEndNodeRow] = useState(20);
+    const [endNodeCol, setEndNodeCol] = useState(8);
+
+    const [draggedItem, setDraggedItem] = useState('');
+
+
+
+
+    //Initializes Grid
     useEffect(() => {
         const cells = [];
+        const startNodeRow = 0;
+        const startNodeCol = 0;
+        const endNodeRow = 20;
+        const endNodeCol = 8;
 
         for (let row = 0; row < ROWS; row++) {
             const currentRow = [];
@@ -26,8 +37,8 @@ const Grid = () => {
                 currentRow.push({
                     row,
                     col,
-                    isStart: row === START_NODE_ROW && col === START_NODE_COL,
-                    isEnd: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+                    isStart: row === startNodeRow && col === startNodeCol,
+                    isEnd: row === endNodeRow && col === endNodeCol,
                     distance: Infinity,
                     visited: false,
                     previousNode: null
@@ -36,63 +47,52 @@ const Grid = () => {
             cells.push(currentRow);
         };
 
-        return () => setNodes(cells);
-    }, [])
+        return () => setNodes(cells)
+    }, []);
 
 
-    const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder) => {
-        for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-          if (i === visitedNodesInOrder.length) {
-            setTimeout(() => {
-              animateShortestPath(nodesInShortestPathOrder);
-            }, 10 * i);
-            return;
-          }
-          setTimeout(() => {
-            const node = visitedNodesInOrder[i];
-            document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited')
-          }, 10 * i);
-        }
-};
 
-    const animateShortestPath = (nodesInShortestPathOrder) => {
-        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-          setTimeout(() => {
-            const node = nodesInShortestPathOrder[i];
-            document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-shortest-path') 
-          }, 50 * i);
-        }
-};
-
-
-      
     const visualizeDijkstra = (nodeMatrix) => {
-        const startNode = nodeMatrix[START_NODE_ROW][START_NODE_ROW];
-        const endNode = nodeMatrix[FINISH_NODE_ROW][FINISH_NODE_COL];
+        //clear all styles before running animation again
+        const allNodes = [...document.getElementsByClassName('node')];
+        allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
+    
+        const startNode = nodeMatrix[startNodeRow][startNodeCol];
+        const endNode = nodeMatrix[endNodeRow][endNodeCol];
         
         const visitedNodesInOrder = dijkstra(nodeMatrix, startNode, endNode);
         const shortestPath = getNodesInShortestPathOrder(endNode);
-
-        animateDijkstra(visitedNodesInOrder, shortestPath);
-}; 
-
+    
+        animateDijkstra(visitedNodesInOrder, shortestPath, speed);
+    }; 
 
     return (
-        <div className="border border-red-400 border-solid flex gap-0.5 self-center">
+        <div className="border border-red-400 border-solid flex self-center">
             {nodes.map((row, rowIndex) => {
                 return(
-                    <div key={rowIndex} className='flex flex-col gap-0.5'>
+                    <div key={rowIndex}>
                     {row.map((node, index) => {
                         const { row, col, isStart, isEnd } = node;
 
-                        return <Node key={index} props={{row, col, isStart, isEnd}} />
+                        return <Node 
+                                key={index}
+                                grid={{nodes, setNodes}}
+                                pointer={{startNodeRow, startNodeCol, endNodeRow, endNodeCol}}
+                                stateHandling={{setStartNodeRow, setStartNodeCol, setEndNodeRow, setEndNodeCol }}
+                                dragStateHandling={{ draggedItem, setDraggedItem }}
+                                row={row}
+                                col={col}
+                                isStart={isStart}
+                                isEnd={isEnd} />
                         })}
                     </div>
                 )
             })
             }
     
-    <button onClick={() => visualizeDijkstra(nodes)}>Search Path</button>
+    <button onClick={() => visualizeDijkstra(nodes)}>
+        Search Path
+    </button>
         </div>
     )
 

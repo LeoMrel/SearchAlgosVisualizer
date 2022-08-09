@@ -6,6 +6,7 @@ export const dijkstra = (nodeMatrix, startNode, endNode) => {
     const visitedNodesInOrder = [];
     const unvisitedNodes = createNodesMap(nodeMatrix);
     
+
     while(unvisitedNodes.length) {
       sortNodesByDistance(unvisitedNodes);
       const closestNode = unvisitedNodes.shift();
@@ -17,4 +18,27 @@ export const dijkstra = (nodeMatrix, startNode, endNode) => {
       updateUnvisitedNeighbors(closestNode, nodeMatrix);
     }
   };
-  
+
+export const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, speed) => {
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          animateShortestPath(nodesInShortestPathOrder);
+        }, speed * i);
+        return;
+      };
+      setTimeout(() => {
+        const node = visitedNodesInOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited');
+      }, speed * i);
+    };
+};
+
+const animateShortestPath = (nodesInShortestPathOrder) => {
+    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+      setTimeout(() => {
+        const node = nodesInShortestPathOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-shortest-path') 
+      }, 10 * i);
+    }
+};

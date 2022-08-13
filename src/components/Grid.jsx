@@ -8,7 +8,7 @@ import Node from './Node';
 const COLUMNS = 5;
 const ROWS = 5;
 
-const Grid = memo(function Grid() {
+const Grid = () => {
 
     const [nodesMatrix, setNodesMatrix] = useState([]);
     const [speed, setSpeed] = useState(10);
@@ -27,7 +27,6 @@ const Grid = memo(function Grid() {
             const currentRow = [];
             for (let col = 0; col < COLUMNS; col++) {
                 currentRow.push({
-                    accepts: ['start', 'end'],
                     row,
                     col,
                     isStart: row === startNodeRow && col === startNodeCol,
@@ -65,11 +64,10 @@ const Grid = memo(function Grid() {
                         <div key={rowIndex} className='flex'>
                             {row.map((node, index) => {
 
-                                const { accepts, row, col, isStart, isEnd } = node;
+                                const { row, col, isStart, isEnd } = node;
 
                                 return <Node
                                     key={index}
-                                    accept={accepts}
                                     row={row}
                                     col={col}
                                     isStart={isStart}
@@ -90,6 +88,6 @@ const Grid = memo(function Grid() {
         </DndProvider>
     )
 
-})
+};
 
 export default Grid

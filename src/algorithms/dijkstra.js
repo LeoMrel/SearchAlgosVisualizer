@@ -6,29 +6,27 @@ export const visualizeDijkstra = (nodesMatrix, variables) => {
   const {startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed} = variables;
 
   //clear all styles before running animation again
-  const allNodes = [...document.getElementsByClassName('node')];
-  allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
+  clearAllNodesStyles();
 
   const startNode = nodesMatrix[startNodeRow][startNodeCol];
   const endNode = nodesMatrix[endNodeRow][endNodeCol];
   
-
-  endNode.previousNode = null;
-
   const visitedNodesInOrder = dijkstra(nodesMatrix, startNode, endNode);
   const shortestPath = getNodesInShortestPathOrder(endNode);
-
-  console.log(endNode)
   
   animateDijkstra(visitedNodesInOrder, shortestPath, speed);
 }; 
+
+export const clearAllNodesStyles = () => {
+  const allNodes = [...document.getElementsByClassName('node')];
+  allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
+}
 
 const dijkstra = (nodesMatrix, startNode, endNode) => {
     startNode.distance = 0;  
     
     const visitedNodesInOrder = [];
     const unvisitedNodes = createNodesMap(nodesMatrix);
-    
 
     while(unvisitedNodes.length) {
       sortNodesByDistance(unvisitedNodes);

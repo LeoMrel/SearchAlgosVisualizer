@@ -1,47 +1,55 @@
-import { useRef } from "react";
+import { memo } from "react";
 import { useDrag, useDrop } from "react-dnd/dist/hooks"
 
-const Node = ({row, col, isStart, isEnd, dragStateHandling, updateNodeMatrix}) => {
+const Node = memo(function Node({ row, col, isStart, isEnd, updateNodes}) {
 
-    const [, startDragRef] = useDrag({
-        type: 'start',
-        item: {row, col},
+    const [{ isDraggingStart }, startDragRef] = useDrag({
+        type: 'node',
+        item: {isStart: true},
         options: {
-            dropEffect: 'copy'
+            dropEffect: 'move'
         },
+        collect: (monitor) => ({
+            isDraggingStart: monitor.isDragging()
+        })
     })
 
-    const [, endDragRef] = useDrag({
-        type: 'end',
-        item: {row, col},
+    const [{ isDraggingEnd }, endDragRef] = useDrag({
+        type: 'node',
+        item: {isStart: false},
         options: {
-            dropEffect: 'copy'
-        }
+            dropEffect: 'move'
+        },
+        collect: (monitor) => ({
+            isDraggingEnd: monitor.isDragging()
+        })
     })
 
-    const [spec, dropRef] = useDrop({
-        accept: ['end', 'start'],
-        drop: (node, monitor) => {
-            const isStart = monitor.getItemType() === 'start';
-            updateNodeMatrix(isStart, row, col)
+    const [, dropRef] = useDrop({
+        accept: ['node'],
+        hover: (node, monitor) => {
+            const test = monitor.getItem().isStart;
+
+            console.log(test)
+            updateNodes(test, row, col);
         }
     });
 
 
     return (
-        <div id={`node-${ row }-${ col }`} ref={isStart || isEnd ? null : dropRef} className={`node relative flex place-items-center place-content-center w-8 h-8 border border-black`}>
+        <div id={`node-${ row }-${ col }`} ref={isStart || isEnd ? null : dropRef} className={`node flex place-items-center place-content-center w-8 h-8 border border-black`}>
             { isStart && 
-            <div ref={startDragRef} className="start cursor-grab bg-green-500 w-full h-full flex place-content-center">
+            <div ref={startDragRef} draggable={true} className="start cursor-grab bg-green-500 w-full h-full flex place-content-center">
             <i className="border-r-8 border-t-8 border-gray-800 rotate-45 h-4 w-4 place-self-center" />
             </div>
             }
             { isEnd && 
-            <div ref={endDragRef} className="end relative z-1 cursor-grab bg-red-500 w-full h-full flex place-content-center" >
+            <div ref={endDragRef} draggable={true} className="end relative z-1 cursor-grab bg-red-500 w-full h-full flex place-content-center" >
             <i className="border-l-8 border-b-8 border-gray-800 rotate-45 h-4 w-4 place-self-center" />
             </div>
             }
         </div>
     )
-};
+});
 
 export default Node

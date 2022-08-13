@@ -16,7 +16,7 @@ export const getUnvisitedNeighbors = (node, grid) => {
     if (col > 0) neighbors.push(grid[row][col - 1]);
     if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
   
-    return neighbors.filter(neighbor => neighbor && !neighbor.visited);
+    return neighbors.filter(neighbor => !neighbor.visited);
 }
 
 
@@ -27,7 +27,7 @@ export const createNodesMap = (grid) => {
         map.push(node);
       };
     };
-  
+    
     return map
 };
   

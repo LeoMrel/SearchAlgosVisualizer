@@ -22,7 +22,6 @@ const Grid = () => {
     //Initializes Grid
     useEffect(() => {
         const cells = [];
-
         for (let row = 0; row < ROWS; row++) {
             const currentRow = [];
             for (let col = 0; col < COLUMNS; col++) {
@@ -40,7 +39,6 @@ const Grid = () => {
         };
 
         setNodesMatrix(cells);
-
     }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol]);
 
     const updateNodes = (isStart, newRow, newCol) => {

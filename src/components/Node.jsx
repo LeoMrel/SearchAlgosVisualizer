@@ -1,9 +1,7 @@
 import { memo, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd/dist/hooks"
 
-const Node = memo(function Node({ row, col, isStart, isEnd, updateNodes}) {
-
-
+const Node = ({ row, col, isStart, isEnd, updateNodes }) => {
     const [{ isDragging }, draggingRef] = useDrag({
         type: 'node',
         item: isStart ? {isStart: true} : {isStart: false},
@@ -42,6 +40,6 @@ const Node = memo(function Node({ row, col, isStart, isEnd, updateNodes}) {
             }
         </div>
     )
-});
+};
 
 export default Node

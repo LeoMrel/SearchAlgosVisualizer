@@ -28,7 +28,7 @@ export const createNodesMap = (grid) => {
       };
     };
   
-    return [...new Set(map)]
+    return map
 };
   
   

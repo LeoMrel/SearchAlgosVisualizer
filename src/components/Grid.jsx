@@ -1,17 +1,17 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import { clearAllNodesStyles, visualizeDijkstra } from '../algorithms/dijkstra'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Node from './Node';
 
-const COLUMNS = 5;
-const ROWS = 5;
+const COLUMNS = 45;
+const ROWS = 15;
 
-const Grid = () => {
+const Grid = memo(function Grid() {
 
     const [nodesMatrix, setNodesMatrix] = useState([]);
-    const [speed, setSpeed] = useState(10);
+    const [speed, setSpeed] = useState(5);
 
     const [startNodeRow, setStartNodeRow] = useState(0);
     const [startNodeCol, setStartNodeCol] = useState(0);
@@ -22,36 +22,35 @@ const Grid = () => {
     //Initializes Grid
     useEffect(() => {
         const cells = [];
-        for (let row = 0; row < ROWS; row++) {
-            const currentRow = [];
-            for (let col = 0; col < COLUMNS; col++) {
-                currentRow.push({
-                    row,
-                    col,
-                    isStart: row === startNodeRow && col === startNodeCol,
-                    isEnd: row === endNodeRow && col === endNodeCol,
-                    distance: Infinity,
-                    visited: false,
-                    previousNode: null
-                });
+            for (let row = 0; row < ROWS; row++) {
+                const currentRow = [];
+                for (let col = 0; col < COLUMNS; col++) {
+                    currentRow.push({
+                        row,
+                        col,
+                        isStart: row === startNodeRow && col === startNodeCol,
+                        isEnd: row === endNodeRow && col === endNodeCol,
+                        distance: Infinity,
+                        visited: false,
+                        previousNode: null
+                    });
+                };
+                cells.push(currentRow);
             };
-            cells.push(currentRow);
-        };
-
-        setNodesMatrix(cells);
+            
+            setNodesMatrix(cells);
     }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol]);
 
-    const updateNodes = (isStart, newRow, newCol) => {
-        clearAllNodesStyles();
-        // Swap places of dragItem and hoverItem in the pets array
-        if (isStart) {
-            setStartNodeRow(newRow);
-            setStartNodeCol(newCol);
-        } else {
-            setEndNodeRow(newRow);
-            setEndNodeCol(newCol);
-        }
-    };
+    const updateNodes = useCallback((isStart, newRow, newCol)  => {
+            clearAllNodesStyles();
+            if (isStart) {
+                setStartNodeRow(newRow);
+                setStartNodeCol(newCol);
+            } else {
+                setEndNodeRow(newRow);
+                setEndNodeCol(newCol);
+            };
+    }, []) 
 
 
     return (
@@ -86,6 +85,6 @@ const Grid = () => {
         </DndProvider>
     )
 
-};
+});
 
 export default Grid

@@ -18,6 +18,11 @@ const Grid = memo(function Grid() {
     const [endNodeRow, setEndNodeRow] = useState(4);
     const [endNodeCol, setEndNodeCol] = useState(4);
 
+    // 1 to move 'start' node;
+    // 2 to move 'end' node;
+    // 3 to create a wall;
+    const [isMouseDown, setIsMouseDown] = useState(0);
+
 
     //Initializes Grid
     useEffect(() => {
@@ -42,7 +47,6 @@ const Grid = memo(function Grid() {
     }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol]);
 
     const updateNodes = useCallback((isStart, newRow, newCol)  => {
-            clearAllNodesStyles();
             if (isStart) {
                 setStartNodeRow(newRow);
                 setStartNodeCol(newCol);
@@ -50,7 +54,8 @@ const Grid = memo(function Grid() {
                 setEndNodeRow(newRow);
                 setEndNodeCol(newCol);
             };
-    }, []) 
+    }, []);
+
 
 
     return (
@@ -69,7 +74,8 @@ const Grid = memo(function Grid() {
                                     col={col}
                                     isStart={isStart}
                                     isEnd={isEnd}
-                                    updateNodes={updateNodes} />
+                                    updateNodes={updateNodes}
+                                    handleMouseState={{isMouseDown, setIsMouseDown}} />
                             })}
                         </div>
                     )

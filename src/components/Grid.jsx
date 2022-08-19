@@ -1,8 +1,6 @@
 import React, { memo, useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import { visualizeDijkstra } from '../algorithms/dijkstra'
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import Node from './Node';
 
 const COLUMNS = 45;
@@ -59,7 +57,6 @@ const Grid = () => {
 
 
     return (
-        <DndProvider backend={HTML5Backend}>
             <div className="flex flex-col self-center">
                 {nodesMatrix.map((row, rowIndex) => {
                     return (
@@ -89,7 +86,6 @@ const Grid = () => {
                     Search Path
                 </button>
             </div>
-        </DndProvider>
     )
 
 };

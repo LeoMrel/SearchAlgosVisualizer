@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useState } from 'react';
 import { useEffect } from 'react';
-import { clearAllNodesStyles, visualizeDijkstra } from '../algorithms/dijkstra'
+import { visualizeDijkstra } from '../algorithms/dijkstra'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Node from './Node';
@@ -8,7 +8,7 @@ import Node from './Node';
 const COLUMNS = 45;
 const ROWS = 15;
 
-const Grid = memo(function Grid() {
+const Grid = () => {
 
     const [nodesMatrix, setNodesMatrix] = useState([]);
     const [speed, setSpeed] = useState(5);
@@ -17,6 +17,11 @@ const Grid = memo(function Grid() {
     const [startNodeCol, setStartNodeCol] = useState(0);
     const [endNodeRow, setEndNodeRow] = useState(4);
     const [endNodeCol, setEndNodeCol] = useState(4);
+
+    // 1 to move 'start' node;
+    // 2 to move 'end' node;
+    // 3 to create a wall;
+    const [isMouseDown, setIsMouseDown] = useState(0);
 
 
     //Initializes Grid
@@ -38,11 +43,10 @@ const Grid = memo(function Grid() {
                 cells.push(currentRow);
             };
             
-            setNodesMatrix(cells);
+        setNodesMatrix(cells);
     }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol]);
 
     const updateNodes = useCallback((isStart, newRow, newCol)  => {
-            clearAllNodesStyles();
             if (isStart) {
                 setStartNodeRow(newRow);
                 setStartNodeCol(newCol);
@@ -50,7 +54,8 @@ const Grid = memo(function Grid() {
                 setEndNodeRow(newRow);
                 setEndNodeCol(newCol);
             };
-    }, []) 
+    }, []);
+
 
 
     return (
@@ -65,11 +70,13 @@ const Grid = memo(function Grid() {
 
                                 return <Node
                                     key={index}
+                                    nodesMatrix={nodesMatrix}
                                     row={row}
                                     col={col}
                                     isStart={isStart}
                                     isEnd={isEnd}
-                                    updateNodes={updateNodes} />
+                                    updateNodes={updateNodes}
+                                    handleMouseState={{isMouseDown, setIsMouseDown}} />
                             })}
                         </div>
                     )
@@ -85,6 +92,6 @@ const Grid = memo(function Grid() {
         </DndProvider>
     )
 
-});
+};
 
 export default Grid

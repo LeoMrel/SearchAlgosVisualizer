@@ -4,10 +4,9 @@ const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, updateN
 
     const { isMouseDown, setIsMouseDown } = handleMouseState;
 
-    const handleMouseDown = () => isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3);
+    const handleMouseDown = () => isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3); // <-- Still need to add walls
 
     const handleMouseUp = (e) => {
-        
         setIsMouseDown(0);
 
         if(isMouseDown === 1) {
@@ -26,16 +25,20 @@ const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, updateN
 
         //dragging start node
         if(isMouseDown === 1) {
+            //const colides = newParent.classList.contains('end-node');
+            //if(colides) skip to next sibling <-- Handle Later
+
             newParent.classList.add('start-node');
             const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
             nodesMatrix[newParentRow][newParentCol].isStart = true;
             
-            //const isEndNode = newParent.classList.contains('end-node');
-            //if(!isEndNode) skip to next sibling <-- Handle Later
         }
 
         //dragging end node
         if(isMouseDown === 2) {
+            //const colides = newParent.classList.contains('start-node');
+            //if(colides) skip to next sibling <-- Handle Later
+
             newParent.classList.add('end-node');
             const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
             nodesMatrix[newParentRow][newParentCol].isEnd = true;

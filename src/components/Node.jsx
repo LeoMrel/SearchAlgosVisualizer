@@ -1,68 +1,60 @@
-import { memo, useCallback, useRef } from "react";
-import { useDrag, useDrop } from "react-dnd/dist/hooks"
+import { memo } from "react"
 
-const Node = memo(function Node({ row, col, isStart, isEnd, updateNodes, handleMouseState }) {
+const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, updateNodes, handleMouseState }) {
 
-
-    const {isMouseDown, setIsMouseDown} = handleMouseState;
-
-    /*const [, draggingRef] = useDrag({
-        type: 'node',
-        item: isStart ? { isStart: true } : { isStart: false },
-        options: {
-            dropEffect: 'move'
-        },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging()
-        })
-    });
-
-    const [, dropRef] = useDrop({
-        accept: 'node',
-        hover: useCallback((node, monitor) => {
-            const isStart = monitor.getItem().isStart;
-            updateNodes(isStart, row, col);
-        }, [updateNodes, row, col])
-    });*/
-
+    const { isMouseDown, setIsMouseDown } = handleMouseState;
 
     const handleMouseDown = () => isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3);
 
     const handleMouseUp = (e) => {
+        
+        setIsMouseDown(0);
+
         if(isMouseDown === 1) {
             const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
-            updateNodes(true, parseInt(newParentRow), parseInt(newParentCol));   
-        };
+            updateNodes(true, parseInt(newParentRow), parseInt(newParentCol));
+        }
 
         if(isMouseDown === 2) {
             const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
             updateNodes(false, parseInt(newParentRow), parseInt(newParentCol));
         };
-        setIsMouseDown(0);
     }
 
-    const handleMouseOver = (e) => {
+    const handleMouseOver = (e) => { 
+        const newParent = e.target;
+
         //dragging start node
         if(isMouseDown === 1) {
-            const newParent = e.target;
             newParent.classList.add('start-node');
+            const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
+            nodesMatrix[newParentRow][newParentCol].isStart = true;
+            
+            //const isEndNode = newParent.classList.contains('end-node');
+            //if(!isEndNode) skip to next sibling <-- Handle Later
         }
+
         //dragging end node
-        else if(isMouseDown === 2) {
-            const newParent = e.target;
+        if(isMouseDown === 2) {
             newParent.classList.add('end-node');
+            const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
+            nodesMatrix[newParentRow][newParentCol].isEnd = true;
         }
     };
 
     const handleMouseLeave = (e) => {
+        const prevParent = e.target;
+        const [prevRow, prevCol] = prevParent.id.match(/\d+/g);
+
         if(isMouseDown === 1) {
-            const prevParent = e.target;
-            prevParent.classList.remove('start-node')
-        }
-        else if(isMouseDown === 2) {
-            const prevParent = e.target;
-            prevParent.classList.remove('end-node')
-        }
+            prevParent.classList.remove('start-node');
+            nodesMatrix[prevRow][prevCol].isStart = false;
+        };
+        
+        if(isMouseDown === 2) {
+            prevParent.classList.remove('end-node');
+            nodesMatrix[prevRow][prevCol].isEnd = false;
+        };
     }
 
     return (

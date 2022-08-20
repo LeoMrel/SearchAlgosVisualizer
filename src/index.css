@@ -25,6 +25,10 @@ code {
   background-color: rgb(239 68 68) !important;
 }
 
+.wall-node {
+  background-color: rgb(31 41 55) !important;
+}
+
 .node-visited {
   animation-name: visitedAnimation;
   animation-duration: 1.5s;

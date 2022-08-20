@@ -31,6 +31,7 @@ const dijkstra = (nodesMatrix, startNode, endNode) => {
     while(unvisitedNodes.length) {
       sortNodesByDistance(unvisitedNodes);
       const closestNode = unvisitedNodes.shift();
+      if(closestNode.isWall) continue;
       if(closestNode.distance === Infinity) return visitedNodesInOrder;
      
       closestNode.visited = true;

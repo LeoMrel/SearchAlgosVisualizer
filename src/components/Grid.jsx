@@ -1,10 +1,10 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useEffect } from 'react';
-import { visualizeDijkstra } from '../algorithms/dijkstra'
+import { clearAllNodesStyles, visualizeDijkstra } from '../algorithms/dijkstra'
 import Node from './Node';
 
-const COLUMNS = 45;
-const ROWS = 15;
+const COLUMNS = 5;
+const ROWS = 5;
 
 const Grid = () => {
 
@@ -20,6 +20,7 @@ const Grid = () => {
     // 2 to move 'end' node;
     // 3 to create a wall;
     const [isMouseDown, setIsMouseDown] = useState(0);
+    const [updateWalls, setUpdateWalls] = useState(false);
 
 
     //Initializes Grid
@@ -33,6 +34,7 @@ const Grid = () => {
                         col,
                         isStart: row === startNodeRow && col === startNodeCol,
                         isEnd: row === endNodeRow && col === endNodeCol,
+                        isWall: false,
                         distance: Infinity,
                         visited: false,
                         previousNode: null
@@ -42,7 +44,7 @@ const Grid = () => {
             };
             
         setNodesMatrix(cells);
-    }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol]);
+    }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol, updateWalls]);
 
     const updateNodes = useCallback((isStart, newRow, newCol)  => {
             if (isStart) {
@@ -63,7 +65,7 @@ const Grid = () => {
                         <div key={rowIndex} className='flex'>
                             {row.map((node, index) => {
 
-                                const { row, col, isStart, isEnd } = node;
+                                const { row, col, isStart, isEnd, isWall } = node;
 
                                 return <Node
                                     key={index}
@@ -72,8 +74,10 @@ const Grid = () => {
                                     col={col}
                                     isStart={isStart}
                                     isEnd={isEnd}
+                                    isWall={isWall}
                                     updateNodes={updateNodes}
-                                    handleMouseState={{isMouseDown, setIsMouseDown}} />
+                                    handleMouseState={{isMouseDown, setIsMouseDown}}
+                                    handleWallsState={{updateWalls, setUpdateWalls}} />
                             })}
                         </div>
                     )

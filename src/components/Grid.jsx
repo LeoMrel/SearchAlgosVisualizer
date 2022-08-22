@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { visualizeDijkstra } from '../algorithms/dijkstra'
 import Node from './Node';
 
-const COLUMNS = 5;
-const ROWS = 5;
+const COLUMNS = 55;
+const ROWS = 25;
 
 const Grid = () => {
 
@@ -49,18 +49,31 @@ const Grid = () => {
         setNodesMatrix(cells);
     }, []);
 
-    const updateNodes = (isWall, isStart, newRow, newCol)  => {
-            const newGrid = [...nodesMatrix];
 
-            if(isWall) {
-                const wallNode = newGrid[newRow][newCol];
-                const newNode = {
-                  ...wallNode,
-                  isWall: !wallNode.isWall
+    const resetMatrix = (matrix) => {
+        const copyCat = [...matrix]
+
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const node = copyCat[row][col];
+                    const newNode = {
+                        ...node,
+                        distance: Infinity,
+                        previousNode: null,
+                        visited: false
+                    }
+
+                    copyCat[row][col] = newNode;
                 };
-                newGrid[newRow][newCol] = newNode;
-                return setNodesMatrix(newGrid);
             };
+
+        return copyCat
+    };
+
+    const updateNodes = (isWall, isStart, newRow, newCol)  => {
+            const newGrid = resetMatrix(nodesMatrix);
+
+            if(isWall) return setNodesMatrix(newGrid);
 
             if (isStart) {
                 setStartNodeRow(newRow);

@@ -1,23 +1,27 @@
-
 const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState }) => {
 
     const { nodesMatrix, updateNodes } = handleState;
     const { isMouseDown, setIsMouseDown } = handleMouseState;
     
 
-    const handleMouseDown = () => isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3);
-
+    const handleMouseDown = (e) => {
+        e.preventDefault();
+        isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3);
+    } 
     const handleMouseUp = (e) => {
         setIsMouseDown(0);
-        const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
+        const newParent = e.target.id ? e.target : null;
+        const [newParentRow, newParentCol] = newParent.id.match(/\d+/g);
 
         if(isMouseDown === 1) updateNodes(false, true, parseInt(newParentRow), parseInt(newParentCol));
 
         if(isMouseDown === 2) updateNodes(false, false, parseInt(newParentRow), parseInt(newParentCol));
+
+        if(isMouseDown === 3) updateNodes(true, false, parseInt(newParentRow), parseInt(newParentCol));
     }
 
     const handleMouseEnter = (e) => { 
-        const newParent = e.target;
+        const newParent = e.target.id ? e.target : null;
         const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
         const nodePointer = nodesMatrix[newParentRow][newParentCol];
 
@@ -39,11 +43,21 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
             nodePointer.isEnd = true;
         }
 
-        if(isMouseDown === 3) updateNodes(true, false, newParentRow, newParentCol);
+        if(isMouseDown === 3) {
+            const isWall = newParent.classList.contains('wall-node');
+
+            if(isWall) {
+                newParent.classList.remove('wall-node');
+                nodePointer.isWall = false;
+            } else {  
+                newParent.classList.add('wall-node');
+                nodePointer.isWall = true;
+            };
+        };
     };
 
     const handleMouseLeave = (e) => {
-        const prevParent = e.target;
+        const prevParent = e.target.id ? e.target : null;
         const [prevRow, prevCol] = prevParent.id.match(/\d+/g);
         const nodePointer = nodesMatrix[prevRow][prevCol];
 
@@ -56,15 +70,22 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
             prevParent.classList.remove('end-node');
             nodePointer.isEnd = false;
         };
+};
+
+const handleClick = (e) => {
+    const target = e.target.id ? e.target : null;
+    const [row, col] = target.id.match(/\d+/g);
+    const isWall = target.classList.contains('wall-node');
+    const nodePointer = nodesMatrix[row][col];
+
+    if(isWall) {
+        target.classList.remove('wall-node');
+        nodePointer.isWall = false;
+    } else {
+        target.classList.add('wall-node');
+        nodePointer.isWall = true;
     }
-
-    const handleClick = (e) => {
-        const target = e.target;
-        const [row, col] = target.id.match(/\d+/g);
-
-        updateNodes(true, false, row, col);
-    };
-
+}
 
 
     return (
@@ -77,7 +98,7 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
         className={
         `${isStart ? 'start-node cursor-grab' : isEnd ? 'end-node cursor-grab' : isWall ? 'wall-node' : ''}
          ${isMouseDown === 1 || isMouseDown === 2 ? 'cursor-grabbing' : ''}
-         node flex place-items-center place-content-center w-8 h-8 border border-black`} />
+         node flex place-items-center place-content-center w-6 h-6 border border-blue-400`} />
     )
 };
 

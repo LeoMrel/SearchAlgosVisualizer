@@ -10,7 +10,7 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
     } 
     const handleMouseUp = (e) => {
         setIsMouseDown(0);
-        const newParent = e.target.id ? e.target : null;
+        const newParent = e.target;
         const [newParentRow, newParentCol] = newParent.id.match(/\d+/g);
 
         if(isMouseDown === 1) updateNodes(false, true, parseInt(newParentRow), parseInt(newParentCol));
@@ -96,8 +96,7 @@ const handleClick = (e) => {
         onMouseDown={handleMouseDown}
         onClick={(isStart || isEnd) ? null : handleClick}
         className={
-        `${isStart ? 'start-node cursor-grab' : isEnd ? 'end-node cursor-grab' : isWall ? 'wall-node' : ''}
-         ${isMouseDown === 1 || isMouseDown === 2 ? 'cursor-grabbing' : ''}
+        `${isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : ''}
          node flex place-items-center place-content-center w-6 h-6 border border-blue-400`} />
     )
 };

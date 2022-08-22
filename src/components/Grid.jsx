@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { visualizeDijkstra } from '../algorithms/dijkstra'
+import { clearAllNodesStyles, visualizeDijkstra } from '../algorithms/dijkstra'
 import Node from './Node';
 
-const COLUMNS = 55;
+const COLUMNS = 60;
 const ROWS = 25;
 
 const Grid = () => {
@@ -49,6 +49,10 @@ const Grid = () => {
         setNodesMatrix(cells);
     }, []);
 
+
+    useEffect(() => {
+        clearAllNodesStyles();
+    }, [isMouseDown]);
 
     const resetMatrix = (matrix) => {
         const copyCat = [...matrix]

@@ -1,25 +1,25 @@
-import { memo } from "react"
 
-const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, isWall, updateNodes, handleMouseState, handleWallsState }) {
+const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState }) => {
 
+    const { nodesMatrix, updateNodes } = handleState;
     const { isMouseDown, setIsMouseDown } = handleMouseState;
-    const { updateWalls, setUpdateWalls} = handleWallsState;
+    
 
-    const handleMouseDown = () => isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3); // <-- Still need to add walls
+    const handleMouseDown = () => isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3);
 
     const handleMouseUp = (e) => {
         setIsMouseDown(0);
         const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
 
-        if(isMouseDown === 1) updateNodes(true, parseInt(newParentRow), parseInt(newParentCol));
+        if(isMouseDown === 1) updateNodes(false, true, parseInt(newParentRow), parseInt(newParentCol));
 
-        if(isMouseDown === 2) updateNodes(false, parseInt(newParentRow), parseInt(newParentCol));
-
+        if(isMouseDown === 2) updateNodes(false, false, parseInt(newParentRow), parseInt(newParentCol));
     }
 
-    const handleMouseOver = (e) => { 
+    const handleMouseEnter = (e) => { 
         const newParent = e.target;
         const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
+        const nodePointer = nodesMatrix[newParentRow][newParentCol];
 
         //dragging start node
         if(isMouseDown === 1) {
@@ -27,7 +27,7 @@ const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, isWall,
             //if(colides) skip to next sibling <-- Handle Later
 
             newParent.classList.add('start-node');
-            nodesMatrix[newParentRow][newParentCol].isStart = true;  
+            nodePointer.isStart = true;
         };
 
         //dragging end node
@@ -36,56 +36,40 @@ const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, isWall,
             //if(colides) skip to next sibling <-- Handle Later
 
             newParent.classList.add('end-node');
-            nodesMatrix[newParentRow][newParentCol].isEnd = true;
+            nodePointer.isEnd = true;
         }
 
-        if(isMouseDown === 3) {
-            const nodePointer = nodesMatrix[newParentRow][newParentCol];
-            const isNotAWall = nodePointer.isWall === false;
-
-            if(isNotAWall) {
-                nodePointer.isWall = true;
-                newParent.classList.add('wall-node');
-            } else {
-                nodePointer.isWall = false;
-                newParent.classList.remove('wall-node');
-            }
-        }
+        if(isMouseDown === 3) updateNodes(true, false, newParentRow, newParentCol);
     };
 
     const handleMouseLeave = (e) => {
         const prevParent = e.target;
         const [prevRow, prevCol] = prevParent.id.match(/\d+/g);
+        const nodePointer = nodesMatrix[prevRow][prevCol];
 
         if(isMouseDown === 1) {
             prevParent.classList.remove('start-node');
-            nodesMatrix[prevRow][prevCol].isStart = false;
+            nodePointer.isStart = false;
         };
         
         if(isMouseDown === 2) {
             prevParent.classList.remove('end-node');
-            nodesMatrix[prevRow][prevCol].isEnd = false;
+            nodePointer.isEnd = false;
         };
     }
 
     const handleClick = (e) => {
         const target = e.target;
-        const isWall = target.classList.contains('wall-node');
         const [row, col] = target.id.match(/\d+/g);
-        const nodePointer = nodesMatrix[row][col];
 
-        if(isWall) {
-            nodePointer.isWall = false;
-            target.classList.remove('wall-node');
-        } else {
-            nodePointer.isWall = true;
-            target.classList.add('wall-node');
-        }
-    }
+        updateNodes(true, false, row, col);
+    };
+
+
 
     return (
         <div id={`node-${ row }-${ col }`} 
-        onMouseOver={handleMouseOver}
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave} 
         onMouseUp={handleMouseUp}
         onMouseDown={handleMouseDown}
@@ -95,6 +79,6 @@ const Node = memo(function Node({ nodesMatrix, row, col, isStart, isEnd, isWall,
          ${isMouseDown === 1 || isMouseDown === 2 ? 'cursor-grabbing' : ''}
          node flex place-items-center place-content-center w-8 h-8 border border-black`} />
     )
-});
+};
 
 export default Node

@@ -8,6 +8,8 @@ export const visualizeDijkstra = (nodesMatrix, variables) => {
   //clear all styles before running animation again
   clearAllNodesStyles();
 
+  console.log(nodesMatrix)
+
   const startNode = nodesMatrix[startNodeRow][startNodeCol];
   const endNode = nodesMatrix[endNodeRow][endNodeCol];
   

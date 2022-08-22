@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { useEffect } from 'react';
-import { clearAllNodesStyles, visualizeDijkstra } from '../algorithms/dijkstra'
+import React, { useState, useEffect, useCallback } from 'react';
+import { visualizeDijkstra } from '../algorithms/dijkstra'
 import Node from './Node';
 
 const COLUMNS = 5;
@@ -20,42 +19,59 @@ const Grid = () => {
     // 2 to move 'end' node;
     // 3 to create a wall;
     const [isMouseDown, setIsMouseDown] = useState(0);
-    const [updateWalls, setUpdateWalls] = useState(false);
-
 
     //Initializes Grid
     useEffect(() => {
         const cells = [];
+        const startNodeRow = 0;
+        const startNodeCol = 0;
+        const endNodeRow = 4;
+        const endNodeCol = 4;
+
             for (let row = 0; row < ROWS; row++) {
                 const currentRow = [];
                 for (let col = 0; col < COLUMNS; col++) {
-                    currentRow.push({
+                    const node = {
                         row,
                         col,
+                        isWall: false,
                         isStart: row === startNodeRow && col === startNodeCol,
                         isEnd: row === endNodeRow && col === endNodeCol,
-                        isWall: false,
                         distance: Infinity,
                         visited: false,
                         previousNode: null
-                    });
+                    };
+                    currentRow.push(node);
                 };
                 cells.push(currentRow);
             };
             
         setNodesMatrix(cells);
-    }, [startNodeRow, startNodeCol, endNodeRow, endNodeCol, updateWalls]);
+    }, []);
 
-    const updateNodes = useCallback((isStart, newRow, newCol)  => {
+    const updateNodes = (isWall, isStart, newRow, newCol)  => {
+            const newGrid = [...nodesMatrix];
+
+            if(isWall) {
+                const wallNode = newGrid[newRow][newCol];
+                const newNode = {
+                  ...wallNode,
+                  isWall: !wallNode.isWall
+                };
+                newGrid[newRow][newCol] = newNode;
+                return setNodesMatrix(newGrid);
+            };
+
             if (isStart) {
                 setStartNodeRow(newRow);
                 setStartNodeCol(newCol);
             } else {
-                setEndNodeRow(newRow);
-                setEndNodeCol(newCol);
+                  setEndNodeRow(newRow);
+                  setEndNodeCol(newCol);  
             };
-    }, []);
 
+            setNodesMatrix(newGrid);
+    };
 
 
     return (
@@ -65,19 +81,17 @@ const Grid = () => {
                         <div key={rowIndex} className='flex'>
                             {row.map((node, index) => {
 
-                                const { row, col, isStart, isEnd, isWall } = node;
+                                const { row, col, isWall, isStart, isEnd } = node;
 
                                 return <Node
                                     key={index}
-                                    nodesMatrix={nodesMatrix}
                                     row={row}
                                     col={col}
+                                    isWall={isWall}
                                     isStart={isStart}
                                     isEnd={isEnd}
-                                    isWall={isWall}
-                                    updateNodes={updateNodes}
-                                    handleMouseState={{isMouseDown, setIsMouseDown}}
-                                    handleWallsState={{updateWalls, setUpdateWalls}} />
+                                    handleState={{nodesMatrix, updateNodes}}
+                                    handleMouseState={{isMouseDown, setIsMouseDown}}  />
                             })}
                         </div>
                     )

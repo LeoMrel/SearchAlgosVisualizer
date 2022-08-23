@@ -35,16 +35,15 @@ code {
 
 .wall-node {
   background-color: rgb(31 41 55) !important;
-  animation-name: movingNode;
-  animation-duration: 500ms;
 }
+
 
 @keyframes movingNode {
   0% {
     transform: scale(0.6);
   }
   75% {
-    transform: scale(1);
+    transform: scale(0.8);
   }
   100% {
     transform: scale(1);
@@ -53,7 +52,7 @@ code {
 
 .node-visited {
   animation-name: visitedAnimation;
-  animation-duration: 800ms;
+  animation-duration: 300ms;
   animation-timing-function: linear;
   animation-delay: 0;
   animation-direction: alternate;
@@ -86,7 +85,7 @@ code {
 
 .node-shortest-path {
   animation-name: shortestPath;
-  animation-duration: 800ms;
+  animation-duration: 400ms;
   animation-timing-function: linear;
   animation-delay: 0;
   animation-direction: alternate;

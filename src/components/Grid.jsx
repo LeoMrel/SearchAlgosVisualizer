@@ -10,23 +10,24 @@ const Grid = () => {
     const [nodesMatrix, setNodesMatrix] = useState([]);
     const [speed, setSpeed] = useState(5);
 
-    const [startNodeRow, setStartNodeRow] = useState(0);
-    const [startNodeCol, setStartNodeCol] = useState(0);
-    const [endNodeRow, setEndNodeRow] = useState(4);
-    const [endNodeCol, setEndNodeCol] = useState(4);
+    const [startNodeRow, setStartNodeRow] = useState(6);
+    const [startNodeCol, setStartNodeCol] = useState(10);
+    const [endNodeRow, setEndNodeRow] = useState(6);
+    const [endNodeCol, setEndNodeCol] = useState(17);
 
     // 1 to move 'start' node;
     // 2 to move 'end' node;
     // 3 to create a wall;
     const [isMouseDown, setIsMouseDown] = useState(0);
+    
 
     //Initializes Grid
     useEffect(() => {
         const cells = [];
-        const startNodeRow = 0;
-        const startNodeCol = 0;
-        const endNodeRow = 4;
-        const endNodeCol = 4;
+        const startNodeRow = 6;
+        const startNodeCol = 10;
+        const endNodeRow = 6;
+        const endNodeCol = 17;
 
             for (let row = 0; row < ROWS; row++) {
                 const currentRow = [];
@@ -64,7 +65,8 @@ const Grid = () => {
                         ...node,
                         distance: Infinity,
                         previousNode: null,
-                        visited: false
+                        visited: false,
+                        isWall: node.isStart || node.isEnd ? false : node.isWall
                     }
 
                     copyCat[row][col] = newNode;
@@ -108,7 +110,7 @@ const Grid = () => {
                                     isStart={isStart}
                                     isEnd={isEnd}
                                     handleState={{nodesMatrix, updateNodes}}
-                                    handleMouseState={{isMouseDown, setIsMouseDown}}  />
+                                    handleMouseState={{isMouseDown, setIsMouseDown}} />
                             })}
                         </div>
                     )

@@ -52,13 +52,13 @@ export const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, s
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           animateShortestPath(nodesInShortestPathOrder);
-        }, 7 * i);
+        }, 5 * i);
         return;
       };
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited');
-      }, 7 * i);
+      }, 5 * i);
     };
 };
 

@@ -35,6 +35,7 @@ code {
 
 .wall-node {
   background-color: rgb(31 41 55) !important;
+  animation: movingNode 50ms;
 }
 
 
@@ -85,7 +86,7 @@ code {
 
 .node-shortest-path {
   animation-name: shortestPath;
-  animation-duration: 400ms;
+  animation-duration: 500ms;
   animation-timing-function: linear;
   animation-delay: 0;
   animation-direction: alternate;

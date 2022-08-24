@@ -51,22 +51,22 @@ export const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, s
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
-          animateShortestPath(nodesInShortestPathOrder);
-        }, 5 * i);
+          animateShortestPath(nodesInShortestPathOrder, speed);
+        }, speed * i);
         return;
       };
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited');
-      }, 5 * i);
+      }, speed * i);
     };
 };
 
-const animateShortestPath = (nodesInShortestPathOrder) => {
+const animateShortestPath = (nodesInShortestPathOrder, speed) => {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-shortest-path') 
-      }, 10 * i);
+      }, speed * i);
     }
 };

@@ -8,7 +8,7 @@ const ROWS = 25;
 const Grid = () => {
 
     const [nodesMatrix, setNodesMatrix] = useState([]);
-    const [speed, setSpeed] = useState(5);
+    const [speed, setSpeed] = useState(3);
 
     const [startNodeRow, setStartNodeRow] = useState(6);
     const [startNodeCol, setStartNodeCol] = useState(10);
@@ -56,24 +56,19 @@ const Grid = () => {
     }, [isMouseDown]);
 
     const resetMatrix = (matrix) => {
-        const copyCat = [...matrix]
+        const matrixRef = [...matrix]
 
             for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLUMNS; col++) {
-                    const node = copyCat[row][col];
-                    const newNode = {
-                        ...node,
-                        distance: Infinity,
-                        previousNode: null,
-                        visited: false,
-                        isWall: node.isStart || node.isEnd ? false : node.isWall
-                    }
-
-                    copyCat[row][col] = newNode;
+                    const node = matrixRef[row][col];
+                    node.distance = Infinity;
+                    node.previousNode = null;
+                    node.visited = false;
+                    node.isWall = node.isStart || node.isEnd ? false : node.isWall
                 };
             };
 
-        return copyCat
+        return matrixRef
     };
 
     const updateNodes = (isWall, isStart, newRow, newCol)  => {
@@ -93,8 +88,27 @@ const Grid = () => {
     };
 
 
+    const handleTouchBoundaryLine = (e) => {
+        const prevParent = e.target.id ? e.target : null;
+        if (isMouseDown === 1 || isMouseDown === 2) {
+            if (prevParent) {
+                console.log(prevParent);
+                const [prevRow, prevCol] = prevParent.id.match(/\d+/g);
+                const nodePointer = nodesMatrix[prevRow][prevCol];
+
+                if (isMouseDown === 1) nodePointer.isStart = true;
+
+                if (isMouseDown === 2) nodePointer.isEnd = true;
+
+                let clickEvent = new Event('mouseup', {'bubbles': true, 'cancelable': true});
+                prevParent.dispatchEvent(clickEvent);
+            }
+        }
+    };
+
     return (
-            <div className="flex flex-col self-center">
+            <div className="flex flex-col">
+                <div id="grid-boundary" onMouseLeave={handleTouchBoundaryLine}>
                 {nodesMatrix.map((row, rowIndex) => {
                     return (
                         <div key={rowIndex} className='flex'>
@@ -116,7 +130,7 @@ const Grid = () => {
                     )
                 })
                 }
-
+                </div>
                 <button
                     onClick={() => visualizeDijkstra(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed })}
                     className="h-20 w-full text-white hover:bg-blue-800 bg-blue-700 place-self-end">

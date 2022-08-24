@@ -15,7 +15,6 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
     };
 
     const handleMouseUp = (e) => {
-        setIsMouseDown(0);
         const newParent = e.target.id ? e.target : null;
         const [newParentRow, newParentCol] = newParent.id.match(/\d+/g);
 
@@ -24,6 +23,8 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
         if (isMouseDown === 2) updateNodes(false, false, parseInt(newParentRow), parseInt(newParentCol));
 
         if (isMouseDown === 3) updateNodes(true, false, parseInt(newParentRow), parseInt(newParentCol));
+
+        setIsMouseDown(0);
     };
 
     const handleMouseEnter = (e) => {
@@ -42,7 +43,7 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
                 nodePointer.isStart = true;
             } else {
                 prevCollision = prevParent;
-            }
+            };
         };
 
         //moving end node

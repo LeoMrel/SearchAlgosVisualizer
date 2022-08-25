@@ -35,8 +35,10 @@ const Navbar = ({ state, handleState }) => {
 
     const visualizeAlgorithm = () => {
         if(selectedAlgo === 'Algorithms') return;
-        const algo = algorithms[selectedAlgo]
-        return algo(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed });
+
+        const algo = algorithms[selectedAlgo];
+        const selectedSpeed = typeof speed === 'number' ? speed : 9;
+        return algo(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, selectedSpeed});
     };
 
     const clearBoard = () => {
@@ -46,15 +48,15 @@ const Navbar = ({ state, handleState }) => {
 
 
 
-    const dropdownParentStyles = 'group hover:cursor-pointer hover:bg-emerald-500 relative w-full h-full text-white py-4 font-semibold transition-colors duration-200';
-    const buttonStyles = 'flex place-content-center px-6 transition-colors duration-200'
+    const parentStyles = 'group hover:cursor-pointer hover:bg-emerald-500 relative w-full h-full text-white py-4 font-semibold transition-colors duration-200';
+    const childStyles = 'flex place-content-center px-6 transition-colors duration-200'
     const dropdownMenuStyles = 'cursor-default p-2 rounded-md z-10 text-left bg-gray-800 transition-all duration-200';
     const optionsStyles = 'hover:cursor-pointer font-semibold hover:bg-emerald-500 rounded-md p-1 my-0.5 w-auto transition-colors duration-200';
 
     return (
         <div className="w-full h-8/12 flex place-content-center gap-1 px-36 bg-gray-800">
-            <button className={dropdownParentStyles}>
-                <div className={buttonStyles}>
+            <button className={parentStyles}>
+                <div className={childStyles}>
                         {selectedAlgo}
                     <div className="ml-auto">▼</div>
                 </div>
@@ -65,8 +67,8 @@ const Navbar = ({ state, handleState }) => {
                     </div>
                 </div>
             </button>
-            <button className={dropdownParentStyles}>
-                <div className={buttonStyles}>
+            <button className={parentStyles}>
+                <div className={childStyles}>
                     <div>
                         Mazes {'&'} patterns
                     </div>
@@ -79,18 +81,18 @@ const Navbar = ({ state, handleState }) => {
                     </div>
                 </div>
             </button>
-            <button onClick={visualizeAlgorithm} className={`${ dropdownParentStyles } bg-emerald-500 hover:bg-emerald-600`}>
-                <div className={buttonStyles}>
-                    Search Path
+            <button onClick={visualizeAlgorithm} className={`${ parentStyles } bg-emerald-500 hover:bg-emerald-600`}>
+                <div className={childStyles}>
+                    {selectedAlgo === 'Algorithms' ? 'Pick an algorithm!' : 'Search Path'}
                 </div>
             </button>
-            <button onClick={clearBoard} className={dropdownParentStyles}>
-                <div className={buttonStyles}>
+            <button onClick={clearBoard} className={parentStyles}>
+                <div className={childStyles}>
                     Clear Board
                 </div>
             </button>
-            <button className={dropdownParentStyles}>
-                <div className={buttonStyles}>
+            <button className={parentStyles}>
+                <div className={childStyles}>
                     <div>
                         {
                         typeof speed === 'string' ? speed

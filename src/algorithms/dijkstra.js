@@ -52,13 +52,13 @@ export const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, s
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           animateShortestPath(nodesInShortestPathOrder);
-        }, typeof speed === 'number' ? speed : 9 * i);
+        }, speed * i);
         return;
       };
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited');
-      }, typeof speed === 'number' ? speed : 9 * i);
+      }, speed * i);
     };
 };
 
@@ -67,6 +67,6 @@ const animateShortestPath = (nodesInShortestPathOrder) => {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-shortest-path') 
-      }, 30 * i);
+      }, 25 * i);
     }
 };

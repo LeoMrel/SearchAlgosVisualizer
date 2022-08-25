@@ -1,4 +1,6 @@
-const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState }) => {
+import { memo } from "react";
+
+const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState, handleMouseState }) {
 
     const { nodesMatrix, updateNodes } = handleState;
     const { isMouseDown, setIsMouseDown } = handleMouseState;
@@ -79,16 +81,12 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
         const nodePointer = nodesMatrix[prevRow][prevCol];
 
         if (isMouseDown === 1) {
-            if (prevCollision) {
-                prevCollision.classList.remove('start-node');
-            };
+            if (prevCollision) prevCollision.classList.remove('start-node');
             nodePointer.isStart = false;
         };
 
         if (isMouseDown === 2) {
-            if (prevCollision) {
-                prevCollision.classList.remove('end-node');
-            };
+            if (prevCollision) prevCollision.classList.remove('end-node');
             nodePointer.isEnd = false;
         };
     };
@@ -116,9 +114,9 @@ const Node = ({ row, col, isWall, isStart, isEnd, handleState, handleMouseState 
             onMouseDown={handleMouseDown}
             onClick={(isStart || isEnd) ? null : handleClick}
             className={
-                `${ isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : '' }
-         node w-6 h-6 border border-blue-400`} />
+                `${ isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : 'bg-white' }
+         node w-6 h-6 border border-blue-300`} />
     )
-};
+});
 
 export default Node

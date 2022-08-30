@@ -33,7 +33,7 @@ export const createNodesMap = (grid) => {
   
   
 export const sortNodesByDistance = (unvisitedNodes) => {
-    unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+  unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 };
   
 // Backtracks from the finishNode to find the shortest path.
@@ -45,7 +45,8 @@ export const getNodesInShortestPathOrder = (endNode) => {
     while (currentNode !== null) {
       nodesInShortestPathOrder.unshift(currentNode);
       currentNode = currentNode.previousNode;
-    }
+    };
+    
     return nodesInShortestPathOrder;
 };
 

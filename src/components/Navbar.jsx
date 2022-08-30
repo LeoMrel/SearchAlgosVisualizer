@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { visualizeAstar } from "../algorithms/Astar";
 import { resetMatrix } from "../algorithms/auxFunctions";
+import { visualizeBFS } from "../algorithms/BFS";
+import { visualizeDFS } from "../algorithms/DFS";
 import { visualizeDijkstra } from "../algorithms/dijkstra";
 
 const Navbar = ({ state, handleState }) => {
@@ -15,14 +17,23 @@ const Navbar = ({ state, handleState }) => {
     const { setNodesMatrix } = handleState;
     
     const algorithms = [
-        {
+    {
         "name": "Dijkstra's Algorithm", 
         "algorithm": visualizeDijkstra
     },
-        {
+    {
         "name": 'A* Algorithm',
         "algorithm": visualizeAstar
-    }];
+    },
+    {
+        "name": 'Breadth First Search',
+        "algorithm": visualizeBFS
+    },
+    {
+        "name": 'Depth First Search',
+        "algorithm": visualizeDFS
+    }
+];
 
     const mazes = [
         {

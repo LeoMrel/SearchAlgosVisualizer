@@ -4,6 +4,7 @@ import { resetMatrix } from "../algorithms/auxFunctions";
 import { visualizeBFS } from "../algorithms/BFS";
 import { visualizeDFS } from "../algorithms/DFS";
 import { visualizeDijkstra } from "../algorithms/dijkstra";
+import { createRandomWalls } from "../algorithms/randomWalls";
 
 const Navbar = ({ state, handleState }) => {
 
@@ -37,8 +38,8 @@ const Navbar = ({ state, handleState }) => {
 
     const mazes = [
         {
-        "name": 'Maze one',
-         'algorithm': 'Maze one'
+        "name": 'Random Maze',
+         'algorithm': createRandomWalls
         },
         {
         "name": 'Maze two',
@@ -66,13 +67,24 @@ const Navbar = ({ state, handleState }) => {
         const startNode = nodesMatrix[startNodeRow][startNodeCol];
         const endNode = nodesMatrix[endNodeRow][endNodeCol];
 
-        return algorithm(nodesMatrix, { startNode, endNode, speed });
+        algorithm(nodesMatrix, { startNode, endNode, speed });
     };
+
+    const createMaze = (algoName) => {
+        //if(selectedMaze === 'Mazes & patterns') return;
+
+        const freshMatrix = resetMatrix(nodesMatrix, true);
+        const userSelection = mazes.filter((maze) => maze.name === algoName)[0];
+        const { algorithm } = userSelection;
+        const newBoard = algorithm(freshMatrix);
+
+        setNodesMatrix(newBoard);
+    }
 
     const clearBoard = () => {
         const freshMatrix = resetMatrix(nodesMatrix, true);
         setNodesMatrix(freshMatrix);
-    }
+    };
 
 
 
@@ -90,9 +102,9 @@ const Navbar = ({ state, handleState }) => {
                 </div>
                 <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
                     <div className={dropdownMenuStyles}>
-                        {algorithms.map((item, index) => {
+                        {algorithms.map((algo, index) => {
                             return(
-                                <h4 key={index} onClick={() => setSelectedAlgo(item.name)} className={`${optionsStyles} ${selectedAlgo === item.name && 'bg-emerald-600'}`}>{item.name}</h4>
+                                <h4 key={index} onClick={() => setSelectedAlgo(algo.name)} className={`${optionsStyles} ${selectedAlgo === algo.name && 'bg-emerald-600'}`}>{algo.name}</h4>
                             )
                         })}
                     </div>
@@ -107,9 +119,9 @@ const Navbar = ({ state, handleState }) => {
                 </div>
                 <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
                     <div className={dropdownMenuStyles}>
-                        {mazes.map((item, index) => {
+                        {mazes.map((maze, index) => {
                             return (
-                                <h4 key={index} className={optionsStyles}>{item.name}</h4>
+                                <h4 key={index} onClick={() => createMaze(maze.name)} className={optionsStyles}>{maze.name}</h4>
                             )
                         })}
                     </div>

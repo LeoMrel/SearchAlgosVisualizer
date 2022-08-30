@@ -9,10 +9,10 @@ function App() {
   
   const [nodesMatrix, setNodesMatrix] = useState([]);
 
-  const [startNodeRow, setStartNodeRow] = useState(6);
-  const [startNodeCol, setStartNodeCol] = useState(10);
-  const [endNodeRow, setEndNodeRow] = useState(6);
-  const [endNodeCol, setEndNodeCol] = useState(17);
+  const [startNodeRow, setStartNodeRow] = useState(10);
+  const [startNodeCol, setStartNodeCol] = useState(15);
+  const [endNodeRow, setEndNodeRow] = useState(10);
+  const [endNodeCol, setEndNodeCol] = useState(49);
 
   // 1 to move 'start' node;
   // 2 to move 'end' node;
@@ -23,10 +23,10 @@ function App() {
   //Initializes Grid
   useEffect(() => {
       const cells = [];
-      const startNodeRow = 6;
-      const startNodeCol = 10;
-      const endNodeRow = 6;
-      const endNodeCol = 17;
+      const startNodeRow = 10;
+      const startNodeCol = 15;
+      const endNodeRow = 10;
+      const endNodeCol = 49;
 
       for (let row = 0; row < ROWS; row++) {
           const currentRow = [];
@@ -83,7 +83,7 @@ const updateNodes = (isWall, isStart, newRow, newCol) => {
         startNodeCol, 
         endNodeRow, 
         endNodeCol }}
-      handleState={{ updateNodes, setNodesMatrix}} />
+      handleState={{ setNodesMatrix }} />
       <Grid 
       state={{ nodesMatrix, isMouseDown, isRunningAnimation }} 
       handleState={{ updateNodes, setIsMouseDown, setIsRunningAnimation }} />

@@ -113,9 +113,8 @@ const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState,
             onMouseUp={handleMouseUp}
             onMouseDown={handleMouseDown}
             onClick={(isStart || isEnd) ? null : handleClick}
-            className={
-                `${ isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : 'bg-white' }
-         node w-6 h-6 border border-blue-300`} />
+            className={`${ isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : 'bg-white' }
+            node w-6 h-6 border border-blue-300`} />
     )
 });
 

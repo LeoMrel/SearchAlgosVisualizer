@@ -1,24 +1,21 @@
-import { createNodesMap, sortNodesByDistance, getNodesInShortestPathOrder, updateUnvisitedNeighbors } from "./auxFunctions";
+import { createNodesMap, sortNodesByDistance, getNodesInShortestPathOrder, updateUnvisitedNeighbors, animateAlgo, clearAllNodesStyles } from "./auxFunctions";
 
 
 export const visualizeDijkstra = (nodesMatrix, variables) => {
   
-  const {startNodeRow, startNodeCol, endNodeRow, endNodeCol, speed} = variables;
+  const { startNode, endNode, speed } = variables;
 
   //clear all styles before running animation again
   clearAllNodesStyles();
 
-  const startNode = nodesMatrix[startNodeRow][startNodeCol];
-  const endNode = nodesMatrix[endNodeRow][endNodeCol];
-
   const visitedNodesInOrder = dijkstra(nodesMatrix, startNode, endNode);
   const shortestPath = getNodesInShortestPathOrder(endNode);
   
-  animateDijkstra(visitedNodesInOrder, shortestPath, speed);
+  animateAlgo(visitedNodesInOrder, shortestPath, speed);
 }; 
 
 
-export const dijkstra = (nodesMatrix, startNode, endNode) => {
+const dijkstra = (nodesMatrix, startNode, endNode) => {
   
     const visitedNodesInOrder = [];  
     
@@ -41,32 +38,3 @@ export const dijkstra = (nodesMatrix, startNode, endNode) => {
       updateUnvisitedNeighbors(closestNode, nodesMatrix);
     }
   };
-
-export const clearAllNodesStyles = () => {
-  const allNodes = [...document.getElementsByClassName('node')];
-  allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
-};
-
-export const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder, speed) => {
-    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-      if (i === visitedNodesInOrder.length) {
-        setTimeout(() => {
-          animateShortestPath(nodesInShortestPathOrder);
-        }, speed * i);
-        return;
-      };
-      setTimeout(() => {
-        const node = visitedNodesInOrder[i];
-        document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited');
-      }, speed * i);
-    };
-};
-
-const animateShortestPath = (nodesInShortestPathOrder) => {
-    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-      setTimeout(() => {
-        const node = nodesInShortestPathOrder[i];
-        document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-shortest-path') 
-      }, 25 * i);
-    }
-};

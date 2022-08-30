@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { clearAllNodesStyles } from './algorithms/dijkstra';
+import { clearAllNodesStyles, resetMatrix } from './algorithms/auxFunctions';
 import Container from './components/Container';
 import Grid from './components/Grid';
 import Navbar from './components/Navbar';
-import { COLUMNS, resetMatrix, ROWS } from './Constants';
+import { COLUMNS, ROWS } from './Constants';
 
 function App() {
   
@@ -38,6 +38,9 @@ function App() {
                   isStart: row === startNodeRow && col === startNodeCol,
                   isEnd: row === endNodeRow && col === endNodeCol,
                   distance: Infinity,
+                  fScore: Infinity,
+                  gScore: Infinity,
+                  hScore: Infinity,
                   visited: false,
                   previousNode: null
               };

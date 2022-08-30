@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { visualizeAstar } from "../algorithms/Astar";
+import { resetMatrix } from "../algorithms/auxFunctions";
 import { visualizeDijkstra } from "../algorithms/dijkstra";
-import { resetMatrix } from "../Constants";
 
 const Navbar = ({ state, handleState }) => {
 
@@ -13,32 +14,48 @@ const Navbar = ({ state, handleState }) => {
 
     const { setNodesMatrix } = handleState;
     
-    const algorithms = {
-        "Dijkstra's algorithm": visualizeDijkstra,
-        'A*': 'insert A* function'
-    };
+    const algorithms = [
+        {
+        "name": "Dijkstra's Algorithm", 
+        "algorithm": visualizeDijkstra
+    },
+        {
+        "name": 'A* Algorithm',
+        "algorithm": visualizeAstar
+    }];
 
-    const mazes = {
-        'Maze one': 'Maze one',
-        'Maze two': 'Maze Two'
-    };
+    const mazes = [
+        {
+        "name": 'Maze one',
+         'algorithm': 'Maze one'
+        },
+        {
+        "name": 'Maze two',
+         "algorithm": 'Maze Two'
+        }
+    ];
 
-    const speedOptions = {
-        'Fast': 3,
-        'Normal': 9,
+    const speedOptions = { 
+        'Fast': 3 ,
+        'Normal': 9 ,
         'Slow': 15
     };
 
 
     const [selectedAlgo, setSelectedAlgo] = useState('Algorithms');
-    const [speed, setSpeed] = useState('Speed');
+    const [speed, setSpeed] = useState(speedOptions['Normal']);
 
     const visualizeAlgorithm = () => {
         if(selectedAlgo === 'Algorithms') return;
 
-        const algo = algorithms[selectedAlgo];
-        const selectedSpeed = typeof speed === 'number' ? speed : 9;
-        return algo(nodesMatrix, { startNodeRow, startNodeCol, endNodeRow, endNodeCol, selectedSpeed});
+
+        resetMatrix(nodesMatrix);
+        const userSelection = algorithms.filter((algo) => algo.name === selectedAlgo)[0];
+        const { algorithm } = userSelection;
+        const startNode = nodesMatrix[startNodeRow][startNodeCol];
+        const endNode = nodesMatrix[endNodeRow][endNodeCol];
+
+        return algorithm(nodesMatrix, { startNode, endNode, speed });
     };
 
     const clearBoard = () => {
@@ -62,8 +79,11 @@ const Navbar = ({ state, handleState }) => {
                 </div>
                 <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
                     <div className={dropdownMenuStyles}>
-                        <h4 onClick={() => setSelectedAlgo("Dijkstra's algorithm")} className={optionsStyles}>Dijkstra's algorithm</h4>
-                        <h4 onClick={() => setSelectedAlgo('A*')} className={optionsStyles}>A*</h4>
+                        {algorithms.map((item, index) => {
+                            return(
+                                <h4 key={index} onClick={() => setSelectedAlgo(item.name)} className={`${optionsStyles} ${selectedAlgo === item.name && 'bg-emerald-600'}`}>{item.name}</h4>
+                            )
+                        })}
                     </div>
                 </div>
             </button>
@@ -76,8 +96,11 @@ const Navbar = ({ state, handleState }) => {
                 </div>
                 <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
                     <div className={dropdownMenuStyles}>
-                        <h4 onClick={'#'} className={optionsStyles}>Maze one</h4>
-                        <h4 onClick={'#'} className={optionsStyles}>Maze two</h4>
+                        {mazes.map((item, index) => {
+                            return (
+                                <h4 key={index} className={optionsStyles}>{item.name}</h4>
+                            )
+                        })}
                     </div>
                 </div>
             </button>
@@ -94,18 +117,15 @@ const Navbar = ({ state, handleState }) => {
             <button className={parentStyles}>
                 <div className={childStyles}>
                     <div>
-                        {
-                        typeof speed === 'string' ? speed
-                        : Object.keys(speedOptions).find(key => speedOptions[key] === speed)
-                        }
+                        Speed
                     </div>
                     <div className="ml-auto">▼</div>
                 </div>
                 <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
                     <div className={dropdownMenuStyles}>
-                        <h4 onClick={() => setSpeed(speedOptions.Fast)} className={optionsStyles}>Fast</h4>
-                        <h4 onClick={() => setSpeed(speedOptions.Normal)} className={optionsStyles}>Normal</h4>
-                        <h4 onClick={() => setSpeed(speedOptions.Slow)} className={optionsStyles}>Slow</h4>
+                        <h4 onClick={() => setSpeed(speedOptions.Fast)} className={`${optionsStyles} ${speed === 3 && 'bg-emerald-600'}`}>Fast</h4>
+                        <h4 onClick={() => setSpeed(speedOptions.Normal)} className={`${optionsStyles} ${speed === 9 && 'bg-emerald-600'}`}>Normal</h4>
+                        <h4 onClick={() => setSpeed(speedOptions.Slow)} className={`${optionsStyles} ${speed === 15 && 'bg-emerald-600'}`}>Slow</h4>
                     </div>
                 </div>
             </button>

@@ -47,7 +47,7 @@ const Astar = (nodesMatrix, startNode, endNode) => {
         for (let neighbor of getUnvisitedNeighbors(currentNode, nodesMatrix)) {
             if (neighbor.isWall) continue;
 
-            let tentative_gScore = currentNode.gScore;
+            let tentative_gScore = currentNode.gScore + 1;
             if (tentative_gScore < neighbor.gScore) {
                 neighbor.distance = currentNode.distance + 1;
                 neighbor.gScore = tentative_gScore;

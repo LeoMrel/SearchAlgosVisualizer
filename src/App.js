@@ -53,7 +53,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    clearAllNodesStyles();
+    (isMouseDown === 1 || isMouseDown === 2) && clearAllNodesStyles();
 }, [isMouseDown]);
 
 
@@ -73,20 +73,20 @@ const updateNodes = (isWall, isStart, newRow, newCol) => {
     return setNodesMatrix(newGrid);
 };
 
-
   return (
       <Container>
       <Navbar 
       state={{
         nodesMatrix, 
+        isRunningAnimation,
         startNodeRow, 
         startNodeCol, 
         endNodeRow, 
         endNodeCol }}
-      handleState={{ setNodesMatrix }} />
+      handleState={{ setNodesMatrix, setIsRunningAnimation }} />
       <Grid 
       state={{ nodesMatrix, isMouseDown, isRunningAnimation }} 
-      handleState={{ updateNodes, setIsMouseDown, setIsRunningAnimation }} />
+      handleState={{ updateNodes, setIsMouseDown }} />
       </Container>
   );
 }

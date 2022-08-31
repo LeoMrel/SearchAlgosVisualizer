@@ -4,7 +4,7 @@ import Node from './Node';
 const Grid = ({state, handleState}) => {
 
     const { nodesMatrix, isMouseDown, isRunningAnimation } = state;
-    const { updateNodes, setIsMouseDown, setIsRunningAnimation } = handleState;
+    const { updateNodes, setIsMouseDown } = handleState;
 
     const handleOutOfBoundaries = (e) => {
         const prevParent = e.target.id ? e.target : null;
@@ -41,7 +41,7 @@ const Grid = ({state, handleState}) => {
                                     isWall={isWall}
                                     isStart={isStart}
                                     isEnd={isEnd}
-                                    handleState={{ nodesMatrix, updateNodes }}
+                                    handleState={{ nodesMatrix, updateNodes, isRunningAnimation }}
                                     handleMouseState={{ isMouseDown, setIsMouseDown }} />
                             })}
                         </div>

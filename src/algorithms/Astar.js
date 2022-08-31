@@ -2,14 +2,14 @@ import { animateAlgo, clearAllNodesStyles, getNodesInShortestPathOrder, getUnvis
 
 export const visualizeAstar = (nodesMatrix, variables) => {
 
-    const { startNode, endNode, speed } = variables
+    const { startNode, endNode, speed, setIsRunningAnimation } = variables
 
     clearAllNodesStyles();
 
     const visitedNodesInOrder = Astar(nodesMatrix, startNode, endNode);
     const shortestPath = getNodesInShortestPathOrder(endNode);
 
-    animateAlgo(visitedNodesInOrder, shortestPath, speed);
+    animateAlgo(visitedNodesInOrder, shortestPath, speed, setIsRunningAnimation);
 }
 
 

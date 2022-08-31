@@ -2,14 +2,14 @@ import { animateAlgo, clearAllNodesStyles, getNodesInShortestPathOrder } from ".
 
 export const visualizeDFS = (matrix, variables) => {
 
-    const { startNode, endNode, speed } = variables;
+    const { startNode, endNode, speed, setIsRunningAnimation } = variables;
 
     clearAllNodesStyles();
 
     const visitedNodesInOrder = DFS(matrix, startNode, endNode);
     const shortestPath = getNodesInShortestPathOrder(endNode);
 
-    animateAlgo(visitedNodesInOrder, shortestPath, speed);
+    animateAlgo(visitedNodesInOrder, shortestPath, speed, setIsRunningAnimation);
 };
 
 const DFS = (matrix, startNode, endNode) => {

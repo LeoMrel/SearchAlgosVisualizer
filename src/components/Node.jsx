@@ -2,7 +2,7 @@ import { memo } from "react";
 
 const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState, handleMouseState }) {
 
-    const { nodesMatrix, updateNodes } = handleState;
+    const { nodesMatrix, updateNodes, isRunningAnimation } = handleState;
     const { isMouseDown, setIsMouseDown } = handleMouseState;
 
     //This variable helps to prevent the user
@@ -13,6 +13,8 @@ const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState,
 
     const handleMouseDown = (e) => {
         e.preventDefault();
+        if(isRunningAnimation) return;
+
         isStart ? setIsMouseDown(1) : isEnd ? setIsMouseDown(2) : setIsMouseDown(3);
     };
 
@@ -34,7 +36,6 @@ const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState,
         const prevParent = e.relatedTarget;
         const [newParentRow, newParentCol] = e.target.id.match(/\d+/g);
         const nodePointer = nodesMatrix[newParentRow][newParentCol];
-
 
         //moving start node
         if (isMouseDown === 1) {
@@ -62,6 +63,7 @@ const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState,
 
         //creating walls
         if (isMouseDown === 3) {
+            newParent.classList.remove('node-visited', 'node-shortest-path');
             if(!isStart && !isEnd) {
                 if (isWall) {
                     newParent.classList.remove('wall-node');
@@ -92,6 +94,8 @@ const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState,
     };
 
     const handleClick = (e) => {
+        if(isRunningAnimation) return;
+
         const target = e.target.id ? e.target : null;
         const [row, col] = target.id.match(/\d+/g);
         const nodePointer = nodesMatrix[row][col];
@@ -113,7 +117,9 @@ const Node = memo(function Node({ row, col, isWall, isStart, isEnd, handleState,
             onMouseUp={handleMouseUp}
             onMouseDown={handleMouseDown}
             onClick={(isStart || isEnd) ? null : handleClick}
-            className={`${ isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : 'bg-white' }
+            className={`
+            ${ isStart ? 'start-node' : isEnd ? 'end-node' : isWall ? 'wall-node' : 'bg-white' }
+            ${isRunningAnimation ? '' : ''} 
             node w-6 h-6 border border-blue-300`} />
     )
 });

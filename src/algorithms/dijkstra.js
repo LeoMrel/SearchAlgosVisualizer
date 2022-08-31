@@ -3,7 +3,7 @@ import { createNodesMap, sortNodesByDistance, getNodesInShortestPathOrder, updat
 
 export const visualizeDijkstra = (nodesMatrix, variables) => {
   
-  const { startNode, endNode, speed } = variables;
+  const { startNode, endNode, speed, setIsRunningAnimation } = variables;
 
   //clear all styles before running animation again
   clearAllNodesStyles();
@@ -11,7 +11,7 @@ export const visualizeDijkstra = (nodesMatrix, variables) => {
   const visitedNodesInOrder = dijkstra(nodesMatrix, startNode, endNode);
   const shortestPath = getNodesInShortestPathOrder(endNode);
   
-  animateAlgo(visitedNodesInOrder, shortestPath, speed);
+  animateAlgo(visitedNodesInOrder, shortestPath, speed, setIsRunningAnimation);
 }; 
 
 

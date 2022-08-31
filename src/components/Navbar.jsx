@@ -10,12 +10,13 @@ const Navbar = ({ state, handleState }) => {
 
     const {
         nodesMatrix,
+        isRunningAnimation,
         startNodeRow,
         startNodeCol,
         endNodeRow,
         endNodeCol } = state;
 
-    const { setNodesMatrix } = handleState;
+    const { setNodesMatrix, setIsRunningAnimation } = handleState;
     
     const algorithms = [
     {
@@ -58,20 +59,21 @@ const Navbar = ({ state, handleState }) => {
     const [speed, setSpeed] = useState(speedOptions['Normal']);
 
     const visualizeAlgorithm = () => {
-        if(selectedAlgo === 'Algorithms') return;
-
+        if(selectedAlgo === 'Algorithms' || isRunningAnimation) return; 
 
         resetMatrix(nodesMatrix);
+        setIsRunningAnimation(true);
+        
         const userSelection = algorithms.filter((algo) => algo.name === selectedAlgo)[0];
         const { algorithm } = userSelection;
         const startNode = nodesMatrix[startNodeRow][startNodeCol];
         const endNode = nodesMatrix[endNodeRow][endNodeCol];
-
-        algorithm(nodesMatrix, { startNode, endNode, speed });
+        
+        algorithm(nodesMatrix, { startNode, endNode, speed, setIsRunningAnimation });
     };
 
     const createMaze = (algoName) => {
-        //if(selectedMaze === 'Mazes & patterns') return;
+        if(isRunningAnimation) return;
 
         const freshMatrix = resetMatrix(nodesMatrix, true);
         const userSelection = mazes.filter((maze) => maze.name === algoName)[0];
@@ -82,25 +84,32 @@ const Navbar = ({ state, handleState }) => {
     }
 
     const clearBoard = () => {
+        if(isRunningAnimation) return;
+        
         const freshMatrix = resetMatrix(nodesMatrix, true);
         setNodesMatrix(freshMatrix);
     };
 
+    const selectSpeed = (option) => {
+        if(isRunningAnimation) return;
+        setSpeed(option);
+    }
 
 
-    const parentStyles = 'group hover:cursor-pointer hover:bg-emerald-500 relative w-full h-full text-white py-4 font-semibold transition-colors duration-200';
-    const childStyles = 'flex place-content-center px-6 transition-colors duration-200'
-    const dropdownMenuStyles = 'cursor-default p-2 rounded-md z-10 text-left bg-gray-800 transition-all duration-200';
-    const optionsStyles = 'hover:cursor-pointer font-semibold hover:bg-emerald-500 rounded-md p-1 my-0.5 w-auto transition-colors duration-200';
+    const parentStyles = `group hover:cursor-pointer hover:bg-emerald-500 ${isRunningAnimation ? 'hover:bg-red-500' : 'bg-transparent'} relative w-full h-full text-white py-4 font-semibold transition-colors duration-200`;
+    const textStyles = 'flex place-content-center px-6 transition-colors duration-200'
+    const dropdownVisivility = `${isRunningAnimation ? '' : 'group-hover:visible'} cursor-default z-10 invisible bg-transparent pt-5 absolute w-full`
+    const dropdownMenuStyles = 'cursor-default p-2 rounded-md z-10 text-left bg-gray-800 transition-colors duration-200';
+    const optionsStyles = 'hover:cursor-pointer hover:bg-emerald-500 font-semibold rounded-md p-1 my-0.5 w-auto transition-colors duration-200';
 
     return (
-        <div className="w-full h-8/12 flex place-content-center gap-1 px-36 bg-gray-800">
+        <div className="w-full h-8/12 flex place-content-center gap-1 px-36 bg-gray-800 shadow-xl">
             <button className={parentStyles}>
-                <div className={childStyles}>
+                <div className={textStyles}>
                         {selectedAlgo}
                     <div className="ml-auto">▼</div>
                 </div>
-                <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
+                <div className={dropdownVisivility}>
                     <div className={dropdownMenuStyles}>
                         {algorithms.map((algo, index) => {
                             return(
@@ -111,13 +120,13 @@ const Navbar = ({ state, handleState }) => {
                 </div>
             </button>
             <button className={parentStyles}>
-                <div className={childStyles}>
+                <div className={textStyles}>
                     <div>
                         Mazes {'&'} patterns
                     </div>
                     <div className="ml-auto">▼</div>
                 </div>
-                <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
+                <div className={dropdownVisivility}>
                     <div className={dropdownMenuStyles}>
                         {mazes.map((maze, index) => {
                             return (
@@ -127,28 +136,28 @@ const Navbar = ({ state, handleState }) => {
                     </div>
                 </div>
             </button>
-            <button onClick={visualizeAlgorithm} className={`${ parentStyles } bg-emerald-500 hover:bg-emerald-600`}>
-                <div className={childStyles}>
+            <button onClick={visualizeAlgorithm} className={`${ parentStyles } ${isRunningAnimation ? 'bg-red-500' : 'bg-emerald-500 hover:bg-emerald-600' }`}>
+                <div className={textStyles}>
                     {selectedAlgo === 'Algorithms' ? 'Pick an algorithm!' : 'Search Path'}
                 </div>
             </button>
             <button onClick={clearBoard} className={parentStyles}>
-                <div className={childStyles}>
+                <div className={textStyles}>
                     Clear Board
                 </div>
             </button>
             <button className={parentStyles}>
-                <div className={childStyles}>
+                <div className={textStyles}>
                     <div>
                         Speed
                     </div>
                     <div className="ml-auto">▼</div>
                 </div>
-                <div className="group-hover:visible cursor-default z-10 invisible bg-transparent mt-5 absolute w-full">
+                <div className={dropdownVisivility}>
                     <div className={dropdownMenuStyles}>
-                        <h4 onClick={() => setSpeed(speedOptions.Fast)} className={`${optionsStyles} ${speed === 3 && 'bg-emerald-600'}`}>Fast</h4>
-                        <h4 onClick={() => setSpeed(speedOptions.Normal)} className={`${optionsStyles} ${speed === 9 && 'bg-emerald-600'}`}>Normal</h4>
-                        <h4 onClick={() => setSpeed(speedOptions.Slow)} className={`${optionsStyles} ${speed === 15 && 'bg-emerald-600'}`}>Slow</h4>
+                        <h4 onClick={() => selectSpeed(speedOptions.Fast)} className={`${optionsStyles} ${speed === 3 && 'bg-emerald-600'}`}>Fast</h4>
+                        <h4 onClick={() => selectSpeed(speedOptions.Normal)} className={`${optionsStyles} ${speed === 9 && 'bg-emerald-600'}`}>Normal</h4>
+                        <h4 onClick={() => selectSpeed(speedOptions.Slow)} className={`${optionsStyles} ${speed === 15 && 'bg-emerald-600'}`}>Slow</h4>
                     </div>
                 </div>
             </button>

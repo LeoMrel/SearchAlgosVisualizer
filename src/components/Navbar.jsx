@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { visualizeAstar } from "../algorithms/Astar";
-import { clearAllNodesStyles, resetMatrix } from "../algorithms/auxFunctions";
+import { resetMatrix } from "../algorithms/auxFunctions";
 import { visualizeBFS } from "../algorithms/BFS";
 import { visualizeDFS } from "../algorithms/DFS";
 import { visualizeDijkstra } from "../algorithms/dijkstra";
 import { createRandomWalls } from "../algorithms/randomWalls";
-import { buildRecursiveWalls, visualizeRecursiveWalls } from "../algorithms/recursiveWalls";
+import { visualizeRecursiveWalls } from "../algorithms/recursiveWalls";
 
 const Navbar = ({ state, handleState }) => {
 

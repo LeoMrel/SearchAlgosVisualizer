@@ -80,10 +80,10 @@ function helperVertical(matrix, x1, x2, y1, y2) {
       for (let i = y1 + 1; i < y2; i++) {
         if (first && second) {
           if (i === max || i === min) {
-            continue;
+            matrix[i][bisection].isWall = false;
           }
         } else if (i === passage) {
-          continue;
+            matrix[i][bisection].isWall = false;
         } else {
           wallsToAnimate.push([i, bisection]);
           matrix[i][bisection].isWall = true;
@@ -113,10 +113,10 @@ function helperVertical(matrix, x1, x2, y1, y2) {
       for (let i = x1 + 1; i < x2; i++) {
         if (first && second) {
           if (i === max || i === min) {
-            continue;
+            matrix[bisection][i].isWall = false;
           }
         } else if (i === passage) {
-          continue;
+            matrix[bisection][i].isWall = false;
         } else {
           wallsToAnimate.push([bisection, i]);
           matrix[bisection][i].isWall = true;
@@ -154,10 +154,10 @@ function helperHorizontal(matrix, x1, x2, y1, y2) {
             for (let i = x1 + 1; i < x2; i++) {
               if (first && second) {
                 if (i === max || i === min) {
-                  continue;
+                    matrix[bisection][i].isWall = false;
                 }
               } else if (i === passage) {
-                continue;
+                matrix[bisection][i].isWall = false;
               } else {
                 wallsToAnimate.push([bisection, i]);
                 matrix[bisection][i].isWall = true;
@@ -186,10 +186,10 @@ function helperHorizontal(matrix, x1, x2, y1, y2) {
         for (let i = y1 + 1; i < y2; i++) {
           if (first && second) {
             if (i === max || i === min) {
-              continue;
+                matrix[i][bisection].isWall = false;
             }
           } else if (i === passage) {
-            continue;
+            matrix[i][bisection].isWall = false;
           } else {
             wallsToAnimate.push([i, bisection]);
             matrix[i][bisection].isWall = true;

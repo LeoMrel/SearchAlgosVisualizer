@@ -1,6 +1,6 @@
 <h1>Search Algorithms Visualizer</h1>
 
-A Search Algorithms Visualizer meant to help me practice graph algorithms, some finicky css and interesting DOM manipulation. This project is done in React alongside TailwindCss.
+A Search Algorithms Visualizer meant to help me practice graph algorithms. The user is allowed to visualize various searching algorithms, create walls, mazes and drag nodes all around the grid. This project is done in React alongside TailwindCss.
 <h3>This covers</h3>
 <ul>
 <li>Dijkstra's Algorithm</li>

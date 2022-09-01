@@ -1,7 +1,6 @@
 import { COLUMNS, ROWS } from "../Constants";
 
-export const createRandomWalls = (matrix) => {
-
+export const createRandomWalls = (matrix, setNodesMatrix) => {
     for(let i = 0; i < 500; i++) {
         let randomRow = Math.floor(Math.random() * ROWS);
         let randomCol = Math.floor(Math.random() * COLUMNS);
@@ -11,5 +10,5 @@ export const createRandomWalls = (matrix) => {
         node.isWall = (node.isStart || node.isEnd) && threshold < 7 ? false : true;
     };
 
-    return matrix;
+    setNodesMatrix(matrix);
 };

@@ -72,9 +72,26 @@ export const resetMatrix = (matrix, isReset) => {
 };
 
 
-export const clearAllNodesStyles = () => {
+export const clearAllNodesStyles = (clearWallsToo) => {
   const allNodes = [...document.getElementsByClassName('node')];
-  allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited'));
+  allNodes.forEach(node => node.classList.remove('node-shortest-path', 'node-visited', clearWallsToo && 'wall-node'));
+};
+
+export const animateWalls = (wallsToAnimate, matrix, setNodesMatrix, setIsRunningAnimation) => {
+  for(let i = 0; i < wallsToAnimate.length; i++) {
+    setTimeout(() => {
+      let row = wallsToAnimate[i][0];
+      let col = wallsToAnimate[i][1];
+      const node = matrix[row][col];
+      const {isStart, isEnd} = node;
+
+      !(isStart || isEnd) && document.getElementById(`node-${row}-${col}`).classList.add('wall-node');
+    }, 15 * i);
+
+    setTimeout(() => {
+      setNodesMatrix(matrix);
+    }, 15 * wallsToAnimate.length);
+  }
 };
 
 export const animateAlgo = (visitedNodesInOrder, nodesInShortestPathOrder, speed, setIsRunningAnimation) => {
@@ -98,9 +115,9 @@ const animateShortestPath = (nodesInShortestPathOrder, setIsRunningAnimation) =>
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-shortest-path');
-      }, 25 * i);
+      }, 30 * i);
       setTimeout(() => {
         setIsRunningAnimation(false);
-      }, 25 * nodesInShortestPathOrder.length)
+      }, 30 * nodesInShortestPathOrder.length)
     }
 };

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { visualizeAstar } from "../algorithms/Astar";
-import { resetMatrix } from "../algorithms/auxFunctions";
+import { clearAllNodesStyles, resetMatrix } from "../algorithms/auxFunctions";
 import { visualizeBFS } from "../algorithms/BFS";
 import { visualizeDFS } from "../algorithms/DFS";
 import { visualizeDijkstra } from "../algorithms/dijkstra";
 import { createRandomWalls } from "../algorithms/randomWalls";
+import { buildRecursiveWalls, visualizeRecursiveWalls } from "../algorithms/recursiveWalls";
 
 const Navbar = ({ state, handleState }) => {
 
@@ -43,8 +44,12 @@ const Navbar = ({ state, handleState }) => {
          'algorithm': createRandomWalls
         },
         {
-        "name": 'Maze two',
-         "algorithm": 'Maze Two'
+        "name": 'Recursive Maze (Vertical Skew)',
+         "algorithm": visualizeRecursiveWalls
+        },
+        {
+        "name": 'Recursive Maze (Horizontal Skew)',
+         "algorithm": visualizeRecursiveWalls
         }
     ];
 
@@ -61,7 +66,7 @@ const Navbar = ({ state, handleState }) => {
     const visualizeAlgorithm = () => {
         if(selectedAlgo === 'Algorithms' || isRunningAnimation) return; 
 
-        resetMatrix(nodesMatrix);
+        resetMatrix(nodesMatrix, false);
         setIsRunningAnimation(true);
         
         const userSelection = algorithms.filter((algo) => algo.name === selectedAlgo)[0];
@@ -72,27 +77,27 @@ const Navbar = ({ state, handleState }) => {
         algorithm(nodesMatrix, { startNode, endNode, speed, setIsRunningAnimation });
     };
 
-    const createMaze = (algoName) => {
+    const createMaze = (mazeAlgoName) => {
         if(isRunningAnimation) return;
 
         const freshMatrix = resetMatrix(nodesMatrix, true);
-        const userSelection = mazes.filter((maze) => maze.name === algoName)[0];
+        const userSelection = mazes.filter((maze) => maze.name === mazeAlgoName)[0];
         const { algorithm } = userSelection;
-        const newBoard = algorithm(freshMatrix);
+        const isVerticalSkew = userSelection.name.includes('Vertical');
 
-        setNodesMatrix(newBoard);
+        algorithm(freshMatrix, setNodesMatrix, isVerticalSkew, setIsRunningAnimation);
     }
 
     const clearBoard = () => {
         if(isRunningAnimation) return;
-        
+
         const freshMatrix = resetMatrix(nodesMatrix, true);
         setNodesMatrix(freshMatrix);
     };
 
-    const selectSpeed = (option) => {
+    const selectSpeed = (userSelection) => {
         if(isRunningAnimation) return;
-        setSpeed(option);
+        setSpeed(userSelection);
     }
 
 
